@@ -3,7 +3,7 @@
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <head>
-	<title>Shoping Cart</title>
+	<title>Shopping Cart</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->	
@@ -34,7 +34,7 @@
 <body class="animsition">
 	
 	<!-- Header -->
-		<jsp:include page="header.jsp" />
+		<jsp:include page="/views/header.jsp" />
 	
 
 	<!-- breadcrumb -->
@@ -46,7 +46,7 @@
 			</a>
 
 			<span class="stext-109 cl4">
-				Shoping Cart
+				Shopping Cart
 			</span>
 		</div>
 	</div>
@@ -226,7 +226,7 @@
 
 	<!-- Footer -->
 	<!-- Back to top -->
-	<jsp:include page="footer.jsp" />
+	<jsp:include page="/views/footer.jsp" />
 	
 
 

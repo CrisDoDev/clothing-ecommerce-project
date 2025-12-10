@@ -9,14 +9,27 @@ public class User {
 	private String address;
 	private int roleId;
 
+
 	public User() {
 	}
 
+	// Constructor đầy đủ
 	public User(String fullName, String email, String password, String phone, int roleId) {
 		this.fullName = fullName;
 		this.email = email;
 		this.password = password;
 		this.phone = phone;
+		this.roleId = roleId;
+	}
+
+	// Constructor dùng khi map từ DB lên (có ID)
+	public User(int id, String fullName, String email, String password, String phone, String address, int roleId) {
+		this.id = id;
+		this.fullName = fullName;
+		this.email = email;
+		this.password = password;
+		this.phone = phone;
+		this.address = address;
 		this.roleId = roleId;
 	}
 

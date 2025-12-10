@@ -34,7 +34,7 @@
 <body class="animsition">
 	
 	<!-- Header -->
-	<jsp:include page="header.jsp" />
+	<jsp:include page="/views/header.jsp" />
 
 
 
@@ -116,7 +116,7 @@
 		
 
 	<!-- Footer -->
-	<jsp:include page="footer.jsp" />
+	<jsp:include page="/views/footer.jsp" />
 	
 
 <!--===============================================================================================-->	
