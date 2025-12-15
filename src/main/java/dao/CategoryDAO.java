@@ -2,31 +2,45 @@ package dao;
 
 import model.Category;
 import util.DBContext;
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryDAO {
 
-	// Lấy tất cả danh mục để hiển thị lên Sidebar/Header
+	// Khai báo DataSource
+	private final DataSource dataSource;
+
+	// Constructor: Lấy DataSource từ DBContext ngay khi DAO được khởi tạo
+	public CategoryDAO() {
+		this.dataSource = DBContext.getDataSource();
+	}
+
 	public List<Category> getAllCategories() {
 		List<Category> list = new ArrayList<>();
-		String sql = "SELECT * FROM Categories";
+		String sql = "SELECT * FROM Categories"; 
 
-		try {
-			Connection conn = new DBContext().getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ResultSet rs = ps.executeQuery();
+		// --- TRY-WITH-RESOURCES
+		// Tự động đóng conn, ps, rs theo thứ tự ngược lại khi block kết thúc
+		try (Connection conn = this.dataSource.getConnection();
+				PreparedStatement ps = conn.prepareStatement(sql);
+				ResultSet rs = ps.executeQuery()) {
+
 			while (rs.next()) {
+				// Giả sử constructor của bạn là (id, name)
 				Category c = new Category(rs.getInt("category_id"), rs.getString("category_name"));
 				list.add(c);
 			}
-			conn.close();
-		} catch (Exception e) {
+		} catch (SQLException e) {
+			// Log lỗi 
+			System.err.println("Error at getAllCategories: " + e.getMessage());
 			e.printStackTrace();
 		}
+
 		return list;
 	}
 }

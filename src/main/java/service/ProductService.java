@@ -2,11 +2,14 @@ package service;
 
 import dao.ProductDAO;
 import model.Product;
+import model.ProductSizes;
+import java.text.Normalizer;
+import java.util.regex.Pattern;
 import java.util.List;
 
 public class ProductService {
 
-    private ProductDAO productDAO;
+    private final ProductDAO productDAO;
 
     public ProductService() {
         productDAO = new ProductDAO();
@@ -27,14 +30,35 @@ public class ProductService {
         return productDAO.getProductById(id);
     }
 
-    //Lấy danh sách sản phẩm theo Danh Mục(Filter)
-    public List<Product> getProductsByCategoryId(String cid) {
-        return productDAO.getProductsByCategoryId(cid);
-    }
-
-    //Lấy toàn bộ sản phẩ
+    //Lấy toàn bộ sản phẩm
     public List<Product> getAllProducts() {
         return productDAO.getAllProducts();
     }
+    
+    // Lấy danh sách size theo ID sản phẩm
+    public List<ProductSizes> getProductSizesByProductId(String productId) {
+        try {
+            int pid = Integer.parseInt(productId);
+            return productDAO.getProductSizesByProductId(pid);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }   
+ // Filter sản phẩm
+    public List<Product> filterProducts(String cid, double min, double max, String sort, int index, int size) {
+        return productDAO.filterProducts(cid, min, max, sort, index, size);
+    }
+    
+    // Đếm số lượng sau filter
+    public int countProductsByFilter(String cid, double min, double max) {
+        return productDAO.countProductsByFilter(cid, min, max);
+    }
+    
+    // Tìm kiếm sản phẩm theo tên
+    public List<Product> searchByName(String s) {
+    	return productDAO.searchByName(s);
+    }
+
     
 }

@@ -1,49 +1,43 @@
 package util;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import javax.sql.DataSource; // Import chuẩn của Java
 
 public class DBContext {
-    private static final String URL = "jdbc:sqlserver://localhost:1433;databaseName=E_CommerceDB;encrypt=true;trustServerCertificate=true;";
-    private static final String USER = "sa";
-    private static final String PASSWORD = "123456";
+	// Biến static để giữ Connection Pool duy nhất
+	private static HikariDataSource dataSource;
 
-    public static Connection getConnection() throws SQLException {
-        try {
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            return DriverManager.getConnection(URL, USER, PASSWORD);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            throw new SQLException("SQL Server JDBC Driver not found", e);
-        }
-    }
+	static {
+		try {
+			HikariConfig config = new HikariConfig();
 
-    // (Tùy chọn) Thêm phương thức đóng kết nối an toàn
-    public static void close(Connection conn) {
-        if (conn!= null) {
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-    
-    //Check kết nối được chưa
-    public static void main(String[] args) {
-        try {
-            System.out.println("Đang kết nối...");
-            Connection conn = DBContext.getConnection();
-            if (conn != null) {
-                System.out.println("KẾT NỐI THÀNH CÔNG!");
-                System.out.println("Tên sản phẩm: " + conn.getMetaData().getDatabaseProductName());
-                conn.close();
-            }
-        } catch (Exception e) {
-            System.out.println("KẾT NỐI THẤT BẠI!");
-            e.printStackTrace();
-        }
-    }
+			// --- Cấu hình SQL Server
+			config.setDriverClassName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+			config.setJdbcUrl(
+					"jdbc:sqlserver://localhost:1433;databaseName=E_CommerceDB;encrypt=true;trustServerCertificate=true;");
+			config.setUsername("sa");
+			config.setPassword("123456");
+
+			// --- Cấu hình HikariCP
+			config.setMaximumPoolSize(10); // Tối đa 10 kết nối
+			config.setMinimumIdle(2); // Giữ ít nhất 2 kết nối rảnh
+			config.setIdleTimeout(30000); // 30s không dùng sẽ thu hồi
+			config.setPoolName("ProjectPool");
+
+			dataSource = new HikariDataSource(config);
+
+		} catch (Exception e) {
+			throw new RuntimeException("Không thể khởi tạo HikariCP!", e);
+		}
+	}
+
+	// Constructor private để chặn việc "new DBContext()" lung tung
+	private DBContext() {
+	}
+
+	// Phương thức static để các DAO lấy nguồn dữ liệu
+	public static DataSource getDataSource() {
+		return dataSource;
+	}
 }
-

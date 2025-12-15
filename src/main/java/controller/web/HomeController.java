@@ -49,8 +49,6 @@ public class HomeController extends HttpServlet {
 		
 		//Danh sách product lấy từ DB
 		List<Product> listProduct = productService.getProductsByPage(index, pageSize);
-		
-		
 		List<Category> listCategory = categoryService.getAllCategories();
 		
 		//Tính toán số lượng trang 

@@ -23,27 +23,48 @@ public class ProductController extends HttpServlet {
             ProductService productService = new ProductService();
             CategoryService categoryService = new CategoryService();
             
+            // Lấy các tham số từ URL
+            String pageStr = request.getParameter("page");
+            String cid = request.getParameter("cid");
+            String priceRange = request.getParameter("price"); // VD: "200000-500000"
+            String sort = request.getParameter("sort");        // VD: "price_asc"
+            
             //Xử lý Phân trang
-            String indexPage = request.getParameter("page");
             int index = 1;
-            try {
-                if(indexPage != null) index = Integer.parseInt(indexPage);
-            } catch (Exception e) { index = 1; }
+            if(pageStr != null) try { index = Integer.parseInt(pageStr); } catch(Exception e) {}
+            int pageSize = 12;
+
+            //Xử lý Giá (min - max)
+            double minPrice = -1;
+            double maxPrice = -1;
+            if (priceRange != null && !priceRange.isEmpty() && !priceRange.equals("all")) {
+                String[] prices = priceRange.split("-");
+                if (prices.length == 2) {
+                    minPrice = Double.parseDouble(prices[0]);
+                    maxPrice = Double.parseDouble(prices[1]);
+                } else if (prices.length == 1) { // Trường hợp "Trên 2tr" (2000000-)
+                    minPrice = Double.parseDouble(prices[0]);
+                }
+            }            
+            // Xử lý Sắp xếp
+            if (sort == null) sort = "default";
+
+            List<Product> listProduct = productService.filterProducts(cid, minPrice, maxPrice, sort, index, pageSize);
+            int totalProduct = productService.countProductsByFilter(cid, minPrice, maxPrice);
             
-            int pageSize = 12; 
-            
-            List<Product> listProduct = productService.getProductsByPage(index, pageSize);
-            List<Category> listCategory = categoryService.getAllCategories();
-            
-            //Tính toán số trang
-            int totalProduct = productService.countTotalProducts();
+            //Tính tổng số trang
             int endPage = totalProduct / pageSize;
-            if(totalProduct % pageSize != 0) endPage++;
-            
+            if (totalProduct % pageSize != 0) endPage++;
+
+            //Gửi dữ liệu về JSP
             request.setAttribute("listProduct", listProduct);
-            request.setAttribute("listCategory", listCategory);
+            request.setAttribute("listCategory", categoryService.getAllCategories());
             request.setAttribute("endPage", endPage);
             request.setAttribute("currentPage", index);
+            
+            request.setAttribute("tag", cid);     
+            request.setAttribute("price", priceRange); 
+            request.setAttribute("sort", sort);   
             
             request.getRequestDispatcher("/views/product.jsp").forward(request, response);
             

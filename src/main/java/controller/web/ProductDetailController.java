@@ -11,13 +11,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import model.Category;
 import model.Product;
+import model.ProductSizes;
 import service.CategoryService;
 import service.ProductService;
 
 /**
  * Servlet implementation class ProductDetailController
  */
-@WebServlet("/ProductDetailController")
+@WebServlet(name = "ProductDetailController", urlPatterns = {"/detail"})
 public class ProductDetailController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -42,11 +43,13 @@ public class ProductDetailController extends HttpServlet {
 		
 		Product product = productService.getProductById(id);
 		List<Category> listCategory = categoryService.getAllCategories();
-		
 		request.setAttribute("product", product);
 		request.setAttribute("listCategory", listCategory);
 		
-		request.getRequestDispatcher("/views/productDetail.jsp").forward(request, response);
+		List<ProductSizes> listSizes = productService.getProductSizesByProductId(id);
+		request.setAttribute("listSizes", listSizes);
+		
+		request.getRequestDispatcher("/views/product-detail.jsp").forward(request, response);
 		
 	}
 
