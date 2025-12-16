@@ -1,7 +1,7 @@
 package model;
 
 public class ProductSizes {
-    private int id;
+    private int sizeId;
     private int productId;
     private String size;
     private int stockQuantity;
@@ -9,19 +9,19 @@ public class ProductSizes {
     public ProductSizes() {
     }
 
-    public ProductSizes(int id, int productId, String size, int stockQuantity) {
-        this.id = id;
+    public ProductSizes(int sizeId, int productId, String size, int stockQuantity) {
+        this.sizeId = sizeId;
         this.productId = productId;
         this.size = size;
         this.stockQuantity = stockQuantity;
     }
 
 	public int getId() {
-		return id;
+		return sizeId;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setId(int sizeId) {
+		this.sizeId = sizeId;
 	}
 
 	public int getProductId() {

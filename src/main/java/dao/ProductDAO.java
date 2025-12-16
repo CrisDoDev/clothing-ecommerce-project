@@ -133,7 +133,7 @@ public class ProductDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     list.add(new ProductSizes(
-                        rs.getInt("product_detail_id"),
+                        rs.getInt("size_id"),
                         rs.getInt("product_id"),
                         rs.getString("size"),
                         rs.getInt("stock_quantity")
@@ -237,7 +237,7 @@ public class ProductDAO {
 	// Helper method để map dữ liệu
 	private Product mapRowToProduct(ResultSet rs) throws SQLException {
 		return new Product(rs.getInt("product_id"), rs.getString("product_name"), rs.getString("description"),
-				rs.getDouble("price"), rs.getString("image_url"), rs.getInt("stock_quantity"),
+				rs.getDouble("price"), rs.getString("image_url"),
 				rs.getInt("category_id"));
 	}
 }
