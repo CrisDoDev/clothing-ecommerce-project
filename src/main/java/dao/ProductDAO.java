@@ -135,7 +135,7 @@ public class ProductDAO {
                     list.add(new ProductSizes(
                         rs.getInt("size_id"),
                         rs.getInt("product_id"),
-                        rs.getString("size"),
+                        rs.getString("size_name"),
                         rs.getInt("stock_quantity")
                     ));
                 }
