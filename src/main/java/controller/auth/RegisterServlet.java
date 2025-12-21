@@ -1,0 +1,60 @@
+package controller.auth;
+
+import service.UserService;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.*;
+import java.io.IOException;
+
+@WebServlet(name = "RegisterServlet", urlPatterns = { "/register" })
+public class RegisterServlet extends HttpServlet {
+
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		request.getRequestDispatcher("register.jsp").forward(request, response);
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
+
+		String fullName = request.getParameter("fullname");
+		String email = request.getParameter("email");
+		String phone = request.getParameter("phone");
+		String pass = request.getParameter("password");
+		String confirmPass = request.getParameter("confirmPassword");
+		
+		if (phone == null || !phone.matches("^0\\d{9}$")) {
+		    request.setAttribute("errorMessage", "Số điện thoại không hợp lệ! (Phải bắt đầu bằng số 0 và có 10 chữ số)");
+		    
+		
+		    request.setAttribute("fullname", fullName);
+		    request.setAttribute("email", email);
+		    request.setAttribute("phone", phone);
+		    
+		    request.getRequestDispatcher("register.jsp").forward(request, response);
+		    return; 
+		}
+
+		if (!pass.equals(confirmPass)) {
+			request.setAttribute("errorMessage", "Mật khẩu xác nhận không khớp!");
+			request.getRequestDispatcher("register.jsp").forward(request, response);
+			return;
+		}
+
+		UserService service = new UserService();
+		boolean isSuccess = service.register(fullName, email, pass, phone);
+
+		
+
+		if (isSuccess) {
+		    
+		    response.sendRedirect("login.jsp?status=success");
+		} else {
+		    request.setAttribute("errorMessage", "Email này đã được sử dụng!");
+		    request.getRequestDispatcher("register.jsp").forward(request, response);
+		}
+	}
+}
