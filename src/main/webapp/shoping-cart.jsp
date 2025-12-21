@@ -4,6 +4,7 @@
 
 <head>
 	<title>Shopping Cart</title>
+
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->	
@@ -34,7 +35,9 @@
 <body class="animsition">
 	
 	<!-- Header -->
+
 		<jsp:include page="/views/header.jsp" />
+
 	
 
 	<!-- breadcrumb -->
@@ -46,7 +49,9 @@
 			</a>
 
 			<span class="stext-109 cl4">
+
 				Shopping Cart
+
 			</span>
 		</div>
 	</div>
@@ -227,6 +232,7 @@
 	<!-- Footer -->
 	<!-- Back to top -->
 	<jsp:include page="/views/footer.jsp" />
+
 	
 
 

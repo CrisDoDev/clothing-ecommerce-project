@@ -36,6 +36,7 @@
 	<!-- Header -->
 	<jsp:include page="/views/header.jsp" />
 
+
 	<!-- breadcrumb -->
 	<div class="container">
 		<div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
@@ -408,6 +409,8 @@
 
 	<!-- Footer -->
 	<jsp:include page="/views/footer.jsp" />
+
+	
 	
 <!--===============================================================================================-->	
 	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
