@@ -21,20 +21,29 @@
 		<div class="auth-box">
 			<h2 class="auth-title">Đăng ký</h2>
 
+			<c:if test="${not empty errorMessage}">
+				<div class="alert alert-danger" role="alert">${errorMessage}</div>
+			</c:if>
+
 			<form action="register" method="post">
 				<div class="input-group">
 					<label>Họ và tên</label> <input type="text" name="fullname"
-						class="auth-input" placeholder="Ví dụ: Nguyễn Văn A" required>
+						class="auth-input" placeholder="Ví dụ: Nguyễn Văn A"
+						value="${param.fullname}" required>
 				</div>
 
 				<div class="input-group">
 					<label>Email</label> <input type="email" name="email"
-						class="auth-input" placeholder="Nhập địa chỉ email" required>
+						class="auth-input" placeholder="Nhập email" value="${param.email}"
+						required>
 				</div>
 
 				<div class="input-group">
 					<label>Số điện thoại</label> <input type="tel" name="phone"
-						class="auth-input" placeholder="Nhập số điện thoại">
+						class="auth-input" placeholder="Nhập số điện thoại (10 số)"
+						value="${param.phone}" pattern="0[0-9]{9}"
+						title="Số điện thoại phải bắt đầu bằng số 0 và có 10 chữ số"
+						required>
 				</div>
 
 				<div class="input-group">
@@ -60,8 +69,8 @@
 			</div>
 
 			<div class="back-home">
-				<a href="views/home.jsp"><i class="fa fa-arrow-left"></i> Quay lại
-					trang chủ</a>
+				<a href="views/home.jsp"><i class="fa fa-arrow-left"></i> Quay
+					lại trang chủ</a>
 			</div>
 		</div>
 	</div>

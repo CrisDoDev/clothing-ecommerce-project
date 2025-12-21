@@ -20,6 +20,14 @@
 	<div class="auth-container">
 		<div class="auth-box">
 			<h2 class="auth-title">Đăng nhập</h2>
+			<c:if test="${param.status == 'success'}">
+				<div class="alert alert-success" role="alert">Đăng ký tài
+					khoản thành công! Vui lòng đăng nhập để tiếp tục.</div>
+			</c:if>
+
+			<c:if test="${not empty errorMessage}">
+				<div class="alert alert-danger" role="alert">${errorMessage}</div>
+			</c:if>
 
 			<form action="login" method="post">
 				<div class="input-group">
@@ -32,10 +40,11 @@
 						class="auth-input" placeholder="Nhập mật khẩu" required>
 				</div>
 
-				<div class="text-right p-b-10"
+				<!--<div class="text-right p-b-10"
 					style="margin-bottom: 15px; font-size: 13px;">
 					<a href="#" style="color: #666;">Quên mật khẩu?</a>
 				</div>
+				-->
 
 				<button type="submit" class="auth-btn">Đăng nhập</button>
 			</form>
@@ -49,8 +58,8 @@
 			</div>
 
 			<div class="back-home">
-				<a href="views/home.jsp"><i class="fa fa-arrow-left"></i> Quay lại
-					trang chủ</a>
+				<a href="views/home.jsp"><i class="fa fa-arrow-left"></i> Quay
+					lại trang chủ</a>
 			</div>
 		</div>
 	</div>

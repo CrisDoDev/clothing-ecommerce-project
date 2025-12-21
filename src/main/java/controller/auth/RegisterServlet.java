@@ -25,6 +25,18 @@ public class RegisterServlet extends HttpServlet {
 		String phone = request.getParameter("phone");
 		String pass = request.getParameter("password");
 		String confirmPass = request.getParameter("confirmPassword");
+		
+		if (phone == null || !phone.matches("^0\\d{9}$")) {
+		    request.setAttribute("errorMessage", "Số điện thoại không hợp lệ! (Phải bắt đầu bằng số 0 và có 10 chữ số)");
+		    
+		
+		    request.setAttribute("fullname", fullName);
+		    request.setAttribute("email", email);
+		    request.setAttribute("phone", phone);
+		    
+		    request.getRequestDispatcher("register.jsp").forward(request, response);
+		    return; 
+		}
 
 		if (!pass.equals(confirmPass)) {
 			request.setAttribute("errorMessage", "Mật khẩu xác nhận không khớp!");
@@ -35,11 +47,14 @@ public class RegisterServlet extends HttpServlet {
 		UserService service = new UserService();
 		boolean isSuccess = service.register(fullName, email, pass, phone);
 
+		
+
 		if (isSuccess) {
-			response.sendRedirect("login.jsp");
+		    
+		    response.sendRedirect("login.jsp?status=success");
 		} else {
-			request.setAttribute("errorMessage", "Email này đã được sử dụng!");
-			request.getRequestDispatcher("register.jsp").forward(request, response);
+		    request.setAttribute("errorMessage", "Email này đã được sử dụng!");
+		    request.getRequestDispatcher("register.jsp").forward(request, response);
 		}
 	}
 }
