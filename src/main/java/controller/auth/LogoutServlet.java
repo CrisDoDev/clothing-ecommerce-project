@@ -5,12 +5,18 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 
-@WebServlet(name = "LogoutServlet", urlPatterns = {"/logout"})
+@WebServlet(name = "LogoutServlet", urlPatterns = { "/logout" })
 public class LogoutServlet extends HttpServlet {
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        session.invalidate(); // Hủy session
-        response.sendRedirect("views/home.jsp"); // Quay về trang chủ
-    }
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		HttpSession session = request.getSession(false); // Lấy session hiện tại, không tạo mới
+		if (session != null) {
+			session.invalidate(); // Xóa sạch session
+		}
+
+		// Redirect về trang chủ kèm tín hiệu status
+		// Dùng request.getContextPath() để đảm bảo đường dẫn luôn đúng
+		response.sendRedirect(request.getContextPath() + "/views/home.jsp?status=logged_out");
+	}
 }

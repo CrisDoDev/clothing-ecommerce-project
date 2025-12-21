@@ -1,18 +1,52 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<head>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
 
 <header class="header-v4">
 	<div class="container-menu-desktop">
 		<div class="top-bar">
 			<div class="content-topbar flex-sb-m h-full container">
-				<div class="left-top-bar">Free ship toàn quốc</div>
+				<div class="left-top-bar">Free ship toàn quốc đơn từ 500k</div>
+
 				<div class="right-top-bar flex-w h-full">
-					<a href="#" class="flex-c-m trans-04 p-lr-25">Help & FAQs</a> <a
-						href="#" class="flex-c-m trans-04 p-lr-25">My Account</a>
+					<a href="#" class="flex-c-m trans-04 p-lr-25"> Help & FAQs </a>
+					<c:choose>
+						<%-- Truong hop 1 da dang nhap --%>
+						<c:when test="${not empty sessionScope.user}">
+							<a href="profile.jsp" class="flex-c-m trans-04 p-lr-25"
+								style="color: #00ad5f; font-weight: bold;"> <i
+								class="fa fa-user m-r-5"></i> Xin chào,
+								${sessionScope.user.fullName}
+							</a>
+
+							<a href="order-history.jsp" class="flex-c-m trans-04 p-lr-25">
+								Đơn mua </a>
+
+							<c:if test="${sessionScope.user.roleId == 1}">
+								<a href="admin/dashboard.jsp" class="flex-c-m trans-04 p-lr-25"
+									style="color: red;"> Trang quản trị </a>
+							</c:if>
+
+							<a href="${pageContext.request.contextPath}/logout"
+								class="flex-c-m trans-04 p-lr-25"> Đăng xuất </a>
+						</c:when>
+
+						<%-- Truong hop 2 : chua dang nhap --%>
+						<c:otherwise>
+							<a href="${pageContext.request.contextPath}/register.jsp"
+								class="flex-c-m trans-04 p-lr-25"> Đăng ký </a>
+							<a href="${pageContext.request.contextPath}/login.jsp"
+								class="flex-c-m trans-04 p-lr-25"> Đăng nhập </a>
+						</c:otherwise>
+					</c:choose>
 				</div>
 			</div>
 		</div>
+
+
 
 		<div class="wrap-menu-desktop">
 			<nav class="limiter-menu-desktop container">
@@ -105,3 +139,26 @@
 		</div>
 	</div>
 </div>
+
+<c:if test="${param.status == 'logged_out'}">
+    <script>
+        // Khi trang load xong thì chạy ngay script này
+        document.addEventListener("DOMContentLoaded", function() {
+            Swal.fire({
+                icon: 'success',         
+                title: 'Đăng xuất thành công!',
+                text: 'Hẹn gặp lại bạn lần sau.',
+                position: 'center',        
+                showConfirmButton: false,  
+                timer: 2000,            
+                timerProgressBar: true  
+            });
+            
+            if (window.history.replaceState) {
+                const url = new URL(window.location.href);
+                url.searchParams.delete('status');
+                window.history.replaceState({path: url.href}, '', url.href);
+            }
+        });
+    </script>
+</c:if>
