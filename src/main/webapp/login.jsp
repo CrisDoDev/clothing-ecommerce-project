@@ -58,7 +58,7 @@
 			</div>
 
 			<div class="back-home">
-				<a href="views/home.jsp"><i class="fa fa-arrow-left"></i> Quay
+				<a href="${pageContext.request.contextPath}/home"><i class="fa fa-arrow-left"></i> Quay
 					lại trang chủ</a>
 			</div>
 		</div>

@@ -31,10 +31,12 @@ public class LoginServlet extends HttpServlet {
 		User user = service.login(email, pass);
 
 		if (user != null) {
-			HttpSession session = request.getSession();
-			session.setAttribute("user", user);
-			session.setMaxInactiveInterval(30 * 60);
-			response.sendRedirect("views/home.jsp");
+		    HttpSession session = request.getSession();
+		    session.setAttribute("user", user);
+		    session.setMaxInactiveInterval(30 * 60);
+
+		    response.sendRedirect(request.getContextPath() + "/home"); 
+		
 		} else {
 			request.setAttribute("errorMessage", "Sai thông tin đăng nhập!");
 			request.getRequestDispatcher("login.jsp").forward(request, response);

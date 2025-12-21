@@ -34,6 +34,8 @@
 	
 	<!-- Header -->
 	<jsp:include page="/views/header.jsp" />
+
+
 	
 
 	<!-- Title page -->
@@ -132,6 +134,7 @@
 
 	<!-- Footer -->
 	<jsp:include page="/views/footer.jsp" />
+
 
 
 <!--===============================================================================================-->	

@@ -15,8 +15,6 @@ public class LogoutServlet extends HttpServlet {
 			session.invalidate(); // Xóa sạch session
 		}
 
-		// Redirect về trang chủ kèm tín hiệu status
-		// Dùng request.getContextPath() để đảm bảo đường dẫn luôn đúng
-		response.sendRedirect(request.getContextPath() + "/views/home.jsp?status=logged_out");
+		response.sendRedirect(request.getContextPath() + "/home?status=logged_out");
 	}
 }

@@ -9,8 +9,7 @@
 	<div class="container-menu-desktop">
 		<div class="top-bar">
 			<div class="content-topbar flex-sb-m h-full container">
-				<div class="left-top-bar">Free ship toàn quốc đơn từ 500k</div>
-
+				<div class="left-top-bar">Free ship toàn quốc</div>
 				<div class="right-top-bar flex-w h-full">
 					<a href="#" class="flex-c-m trans-04 p-lr-25"> Help & FAQs </a>
 					<c:choose>
@@ -45,8 +44,6 @@
 				</div>
 			</div>
 		</div>
-
-
 
 		<div class="wrap-menu-desktop">
 			<nav class="limiter-menu-desktop container">
