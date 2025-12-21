@@ -1,9 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
 <head>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
 
 <header class="header-v4">
 	<div class="container-menu-desktop">
@@ -11,6 +13,7 @@
 			<div class="content-topbar flex-sb-m h-full container">
 				<div class="left-top-bar">Free ship toàn quốc</div>
 				<div class="right-top-bar flex-w h-full">
+
 					<a href="#" class="flex-c-m trans-04 p-lr-25"> Help & FAQs </a>
 					<c:choose>
 						<%-- Truong hop 1 da dang nhap --%>
@@ -41,6 +44,7 @@
 								class="flex-c-m trans-04 p-lr-25"> Đăng nhập </a>
 						</c:otherwise>
 					</c:choose>
+
 				</div>
 			</div>
 		</div>
@@ -159,3 +163,4 @@
         });
     </script>
 </c:if>
+
