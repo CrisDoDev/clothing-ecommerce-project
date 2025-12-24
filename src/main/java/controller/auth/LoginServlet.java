@@ -15,7 +15,7 @@ public class LoginServlet extends HttpServlet {
 			throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
 		if (session != null && session.getAttribute("user") != null) {
-			response.sendRedirect("views/home.jsp");
+			response.sendRedirect(request.getContextPath() + "/home"); // Gọi Servlet Home
 			return;
 		}
 		request.getRequestDispatcher("login.jsp").forward(request, response);
@@ -31,12 +31,12 @@ public class LoginServlet extends HttpServlet {
 		User user = service.login(email, pass);
 
 		if (user != null) {
-		    HttpSession session = request.getSession();
-		    session.setAttribute("user", user);
-		    session.setMaxInactiveInterval(30 * 60);
+			HttpSession session = request.getSession();
+			session.setAttribute("user", user);
+			session.setMaxInactiveInterval(30 * 60);
 
-		    response.sendRedirect(request.getContextPath() + "/home"); 
-		
+			response.sendRedirect(request.getContextPath() + "/home");
+
 		} else {
 			request.setAttribute("errorMessage", "Sai thông tin đăng nhập!");
 			request.getRequestDispatcher("login.jsp").forward(request, response);
