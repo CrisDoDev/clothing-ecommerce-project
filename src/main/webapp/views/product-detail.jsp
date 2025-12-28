@@ -83,7 +83,7 @@
                         </p>
 
                         <div class="p-t-33">
-                            <form action="cart" method="post">
+                            <form action="${pageContext.request.contextPath}/cart" method="post">
                                 <input type="hidden" name="action" value="add">
                                 <input type="hidden" name="id" value="${product.id}">
                                 
