@@ -105,12 +105,11 @@
 													<i class="fs-16 zmdi zmdi-minus"></i>
 												</div>
 
-												<%-- Name phải unique để xử lý update sau này, tạm thời để hiển thị --%>
+												
 												<input class="mtext-104 cl3 txt-center num-product"
 													type="number"
 													name="num_product_${item.product.id}_${item.size}"
 													value="${item.quantity}">
-
 												<div
 													class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
 													<i class="fs-16 zmdi zmdi-plus"></i>
@@ -207,19 +206,7 @@
 	</script>
 	<script src="js/main.js"></script>
 
-	<script>
-		// Code này để nút +/- hoạt động về mặt giao diện
-		$('.btn-num-product-down').on('click', function() {
-			var numProduct = Number($(this).next().val());
-			if (numProduct > 0)
-				$(this).next().val(numProduct - 1);
-		});
 
-		$('.btn-num-product-up').on('click', function() {
-			var numProduct = Number($(this).prev().val());
-			$(this).prev().val(numProduct + 1);
-		});
-	</script>
 
 </body>
 </html>
