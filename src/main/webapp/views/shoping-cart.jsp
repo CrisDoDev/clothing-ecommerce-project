@@ -105,16 +105,21 @@
 													<i class="fs-16 zmdi zmdi-minus"></i>
 												</div>
 
-												
+												<%-- max và sự kiện onkeyup --%>
 												<input class="mtext-104 cl3 txt-center num-product"
 													type="number"
 													name="num_product_${item.product.id}_${item.size}"
-													value="${item.quantity}">
+													value="${item.quantity}" max="${item.stockQuantity}"
+													onkeyup="checkMaxStock(this)">
+
 												<div
 													class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
 													<i class="fs-16 zmdi zmdi-plus"></i>
 												</div>
-											</div>
+											</div> <%-- Hiển thị tồn kho  --%>
+											<div class="text-center p-t-5"
+												style="font-size: 11px; color: #888;">(Còn:
+												${item.stockQuantity})</div>
 										</td>
 										<td class="column-5"><fmt:formatNumber
 												value="${item.totalPrice}" type="number"
@@ -205,6 +210,39 @@
 		});
 	</script>
 	<script src="js/main.js"></script>
+	
+	<script>
+    // Hàm chặn nhập tay quá số lượng
+    function checkMaxStock(input) {
+        var max = parseInt(input.getAttribute('max'));
+        var val = parseInt(input.value);
+        if (val > max) {
+            input.value = max;
+            swal("Thông báo", "Chỉ còn " + max + " sản phẩm trong kho!", "warning");
+        }
+        if (val < 1) input.value = 1;
+    }
+
+    // Xử lý nút Tăng (+)
+    $('.btn-num-product-up').off('click').on('click', function(){
+        var input = $(this).prev(); // Lấy ô input bên cạnh
+        var numProduct = Number(input.val());
+        var maxStock = parseInt(input.attr('max'));
+
+        if (numProduct < maxStock) {
+            input.val(numProduct + 1);
+        } else {
+            swal("Rất tiếc", "Kho chỉ còn " + maxStock + " sản phẩm!", "error");
+        }
+    });
+
+    // Xử lý nút Giảm (-)
+    $('.btn-num-product-down').off('click').on('click', function(){
+        var input = $(this).next(); // Lấy ô input bên cạnh
+        var numProduct = Number(input.val());
+        if(numProduct > 1) input.val(numProduct - 1);
+    });
+</script>
 
 
 

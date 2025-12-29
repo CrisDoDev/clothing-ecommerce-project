@@ -8,6 +8,9 @@ import service.ProductService;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
+
+import dao.ProductDAO;
+
 import java.io.IOException;
 import java.util.Enumeration;
 
@@ -64,8 +67,13 @@ public class CartController extends HttpServlet {
 				String size = request.getParameter("size");
 
 				Product product = productService.getProductById(String.valueOf(id));
+
+				ProductDAO productDAO = new ProductDAO();
+				int currentStock = productDAO.getStockBySize(id, size);
+
 				if (product != null) {
-					CartItem item = new CartItem(product, quantity, size);
+					// Truyền thêm currentStock vào Constructor
+					CartItem item = new CartItem(product, quantity, size, currentStock);
 					cart.addItem(item);
 				}
 				response.sendRedirect("cart");
@@ -93,6 +101,12 @@ public class CartController extends HttpServlet {
 							String size = parts[3];
 
 							int newQuantity = Integer.parseInt(request.getParameter(paramName));
+							// Check lại tồn kho
+							int currentStock = new ProductDAO().getStockBySize(productId, size);
+
+							if (newQuantity > currentStock) {
+								newQuantity = currentStock; // Nếu nhập lố, ép về max
+							}
 
 							if (newQuantity > 0) {
 								cart.updateItem(productId, size, newQuantity);
