@@ -241,7 +241,7 @@ public class ProductDAO {
 
 	public int getStockBySize(int productId, String sizeName) {
 		String query = "SELECT stock_quantity FROM ProductSizes WHERE product_id = ? AND size_name = ?";
-		try (Connection conn = DBContext.getDataSource().getConnection();
+		try (Connection conn = this.dataSource.getConnection();
 				PreparedStatement ps = conn.prepareStatement(query)) {
 			ps.setInt(1, productId);
 			ps.setString(2, sizeName);
@@ -254,4 +254,33 @@ public class ProductDAO {
 		}
 		return 0;
 	}
+	
+	// Hàm lấy ID của Size dựa vào ProductID và Tên Size
+    public int getSizeId(int productId, String sizeName) {
+        String query = "SELECT size_id FROM ProductSizes WHERE product_id = ? AND size_name = ?";
+        try (Connection conn = this.dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, productId);
+            ps.setString(2, sizeName);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1; // Không tìm thấy
+    }
+
+    //  Hàm trừ tồn kho 
+    public boolean decreaseStock(Connection conn, int sizeId, int quantityToDecrease) throws SQLException {
+        String query = "UPDATE ProductSizes SET stock_quantity = stock_quantity - ? WHERE size_id = ? AND stock_quantity >= ?";
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, quantityToDecrease);
+            ps.setInt(2, sizeId);
+            ps.setInt(3, quantityToDecrease); // Điều kiện: Tồn kho phải >= số lượng mua
+            
+            int rows = ps.executeUpdate();
+            return rows > 0; // Trả về true nếu trừ thành công
+        }
+    }
 }
