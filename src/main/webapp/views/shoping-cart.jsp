@@ -56,7 +56,7 @@
 	</div>
 
 	<form class="bg0 p-t-75 p-b-85" action="cart" method="post">
-		<input type="hidden" name="action" value="update">
+
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
@@ -133,7 +133,7 @@
 							class="flex-w flex-sb-m bor15 p-t-18 p-b-15 p-lr-40 p-lr-15-sm">
 							<div class="flex-w flex-m m-r-20 m-tb-5"></div>
 
-							<button
+							<button type="submit" name="action" value="update"
 								class="flex-c-m stext-101 cl2 size-119 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-10">
 								Cập nhật giỏ hàng</button>
 						</div>
@@ -172,9 +172,9 @@
 
 						<c:choose>
 							<c:when test="${not empty sessionScope.cart.items}">
-								<a href="checkout"
+								<button type="submit" name="action" value="checkout"
 									class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
-									Tiến hành thanh toán </a>
+									Tiến hành thanh toán</button>
 							</c:when>
 							<c:otherwise>
 								<button type="button"
@@ -210,39 +210,45 @@
 		});
 	</script>
 	<script src="js/main.js"></script>
-	
+
 	<script>
-    // Hàm chặn nhập tay quá số lượng
-    function checkMaxStock(input) {
-        var max = parseInt(input.getAttribute('max'));
-        var val = parseInt(input.value);
-        if (val > max) {
-            input.value = max;
-            swal("Thông báo", "Chỉ còn " + max + " sản phẩm trong kho!", "warning");
-        }
-        if (val < 1) input.value = 1;
-    }
+		// Hàm chặn nhập tay quá số lượng
+		function checkMaxStock(input) {
+			var max = parseInt(input.getAttribute('max'));
+			var val = parseInt(input.value);
+			if (val > max) {
+				input.value = max;
+				swal("Thông báo", "Chỉ còn " + max + " sản phẩm trong kho!",
+						"warning");
+			}
+			if (val < 0)
+				input.value = 0;
+		}
 
-    // Xử lý nút Tăng (+)
-    $('.btn-num-product-up').off('click').on('click', function(){
-        var input = $(this).prev(); // Lấy ô input bên cạnh
-        var numProduct = Number(input.val());
-        var maxStock = parseInt(input.attr('max'));
+		// Xử lý nút Tăng (+)
+		$('.btn-num-product-up').off('click').on(
+				'click',
+				function() {
+					var input = $(this).prev(); // Lấy ô input bên cạnh
+					var numProduct = Number(input.val());
+					var maxStock = parseInt(input.attr('max'));
 
-        if (numProduct < maxStock) {
-            input.val(numProduct + 1);
-        } else {
-            swal("Rất tiếc", "Kho chỉ còn " + maxStock + " sản phẩm!", "error");
-        }
-    });
+					if (numProduct < maxStock) {
+						input.val(numProduct + 1);
+					} else {
+						swal("Rất tiếc", "Kho chỉ còn " + maxStock
+								+ " sản phẩm!", "error");
+					}
+				});
 
-    // Xử lý nút Giảm (-)
-    $('.btn-num-product-down').off('click').on('click', function(){
-        var input = $(this).next(); // Lấy ô input bên cạnh
-        var numProduct = Number(input.val());
-        if(numProduct > 1) input.val(numProduct - 1);
-    });
-</script>
+		// Xử lý nút Giảm (-)
+		$('.btn-num-product-down').off('click').on('click', function() {
+			var input = $(this).next(); // Lấy ô input bên cạnh
+			var numProduct = Number(input.val());
+			if (numProduct > 0)
+				input.val(numProduct - 1);
+		});
+	</script>
 
 
 

@@ -28,7 +28,7 @@ public class CheckoutController extends HttpServlet {
 
         // Giỏ hàng trống -> Về trang chủ
         if (cart == null || cart.getItems().isEmpty()) {
-            response.sendRedirect("product");
+        	response.sendRedirect("product?message=cart_empty");
             return;
         }
               

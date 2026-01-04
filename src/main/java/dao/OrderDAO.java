@@ -11,24 +11,28 @@ public class OrderDAO {
 
     // Trả về Order ID vừa tạo
     // Nhận Connection từ Service để dùng chung Transaction
-    public int insertOrder(Connection conn, User user, Cart cart, String address) throws SQLException {
-        String query = "INSERT INTO Orders (user_id, total_money, shipping_address, status, order_date) VALUES (?, ?, ?, N'Chờ xử lý', GETDATE()); SELECT SCOPE_IDENTITY()";
-        
-        try (PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.setInt(1, user.getId());
-            ps.setDouble(2, cart.getTotalMoney());
-            ps.setString(3, address);
+	public int insertOrder(Connection conn, User user, Cart cart, String address) throws SQLException {
+		
+	    String query = "INSERT INTO Orders (user_id, total_money, shipping_address, status, order_date) VALUES (?, ?, ?, N'Chờ xử lý', GETDATE())";
+	    
+	    try (PreparedStatement ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+	        ps.setInt(1, user.getId());
+	        ps.setDouble(2, cart.getTotalMoney());
+	        ps.setString(3, address);
 
-            // Thực thi và lấy ID tự tăng
-            ps.execute();
-            try (ResultSet rs = ps.getResultSet()) {
-                if (rs.next()) {
-                    return rs.getInt(1); // Trả về order_id
-                }
-            }
-        }
-        return -1;
-    }
+	        int affectedRows = ps.executeUpdate();
+
+	        // Lấy ID sinh ra từ getGeneratedKeys()
+	        if (affectedRows > 0) {
+	            try (ResultSet rs = ps.getGeneratedKeys()) {
+	                if (rs.next()) {
+	                    return rs.getInt(1); // Trả về Order ID vừa tạo
+	                }
+	            }
+	        }
+	    }
+	    return -1; // Trả về -1 nếu lỗi
+	}
 
     //  Insert Order Detail
     public void insertOrderDetail(Connection conn, int orderId, int productId, int sizeId, int quantity, double price) throws SQLException {

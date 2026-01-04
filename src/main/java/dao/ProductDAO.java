@@ -275,12 +275,12 @@ public class ProductDAO {
     public boolean decreaseStock(Connection conn, int sizeId, int quantityToDecrease) throws SQLException {
         String query = "UPDATE ProductSizes SET stock_quantity = stock_quantity - ? WHERE size_id = ? AND stock_quantity >= ?";
         try (PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.setInt(1, quantityToDecrease);
-            ps.setInt(2, sizeId);
-            ps.setInt(3, quantityToDecrease); // Điều kiện: Tồn kho phải >= số lượng mua
+            ps.setInt(1, quantityToDecrease); 
+            ps.setInt(2, sizeId);             
+            ps.setInt(3, quantityToDecrease); 
             
             int rows = ps.executeUpdate();
-            return rows > 0; // Trả về true nếu trừ thành công
+            return rows > 0; // Nếu rows = 0 nghĩa là không thỏa mãn điều kiện WHERE -> Trả về false
         }
     }
 }

@@ -142,7 +142,7 @@
 </div>
 
 <c:if test="${param.status == 'logged_out'}">
-    <script>
+	<script>
         // Khi trang load xong thì chạy ngay script này
         document.addEventListener("DOMContentLoaded", function() {
             Swal.fire({
@@ -161,6 +161,53 @@
                 window.history.replaceState({path: url.href}, '', url.href);
             }
         });
+    </script>
+</c:if>
+
+<%-- Xử lý thông báo Đặt hàng thành công --%>
+<c:if test="${param.status == 'order_success'}">
+	<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Đặt hàng thành công!',
+                text: 'Cảm ơn bạn đã mua sắm. Chúng tôi sẽ liên hệ sớm nhất.',
+                confirmButtonText: 'Xem đơn hàng',
+                showCancelButton: true,
+                cancelButtonText: 'Đóng',
+                confirmButtonColor: '#717fe0'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Chuyển hướng sang trang lịch sử đơn hàng
+                    window.location.href = "order-history";
+                }
+            });
+
+            // Xóa param trên URL cho đẹp
+            if (window.history.replaceState) {
+                const url = new URL(window.location.href);
+                url.searchParams.delete('status');
+                window.history.replaceState({path: url.href}, '', url.href);
+            }
+        });
+    </script>
+</c:if>
+
+<%-- Thông báo khi giỏ hàng trống --%>
+<c:if test="${param.message == 'cart_empty'}">
+	<script>
+        Swal.fire({
+            icon: 'info',
+            title: 'Giỏ hàng trống',
+            text: 'Bạn chưa có sản phẩm nào để thanh toán. Hãy mua sắm thêm nhé!',
+            confirmButtonColor: '#717fe0'
+        });
+        // Xóa param trên URL
+        if (window.history.replaceState) {
+            const url = new URL(window.location.href);
+            url.searchParams.delete('message');
+            window.history.replaceState({path: url.href}, '', url.href);
+        }
     </script>
 </c:if>
 

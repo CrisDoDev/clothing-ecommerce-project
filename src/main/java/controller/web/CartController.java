@@ -84,7 +84,7 @@ public class CartController extends HttpServlet {
 		}
 
 		// CẬP NHẬT GIỎ HÀNG
-		else if ("update".equals(action)) {
+		else if ("update".equals(action) || "checkout".equals(action)) {
 			// Duyệt qua tất cả tham số được gửi lên từ form
 			Enumeration<String> paramNames = request.getParameterNames();
 
@@ -120,7 +120,13 @@ public class CartController extends HttpServlet {
 				}
 			}
 
-			response.sendRedirect("cart");
+			if ("checkout".equals(action)) {
+		        // Nếu bấm nút Thanh toán -> Update xong thì chuyển sang Checkout
+		        response.sendRedirect("checkout");
+		    } else {
+		        // Nếu bấm nút Cập nhật -> Reload lại trang giỏ hàng
+		        response.sendRedirect("cart");
+		    }
 		}
 	}
 }
