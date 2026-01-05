@@ -24,8 +24,8 @@
 								${sessionScope.user.fullName}
 							</a>
 
-							<a href="order-history.jsp" class="flex-c-m trans-04 p-lr-25">
-								Đơn mua </a>
+							<a href="${pageContext.request.contextPath}/order-history"
+								class="flex-c-m trans-04 p-lr-25"> Đơn mua </a>
 
 							<c:if test="${sessionScope.user.roleId == 1}">
 								<a href="admin/dashboard.jsp" class="flex-c-m trans-04 p-lr-25"

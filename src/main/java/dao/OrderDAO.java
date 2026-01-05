@@ -2,10 +2,13 @@ package dao;
 
 import model.Cart;
 import model.CartItem;
+import model.Order;
 import model.User;
 import util.DBContext;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OrderDAO {
 
@@ -46,5 +49,33 @@ public class OrderDAO {
             ps.setDouble(5, price);
             ps.executeUpdate();
         }
+    }
+ // lấy danh sách đơn hàng của 1 user
+    public List<Order> getOrdersByUserId(int userId) {
+        List<Order> list = new ArrayList<>();
+        String query = "SELECT * FROM Orders WHERE user_id = ? ORDER BY order_date DESC"; // Mới nhất lên đầu
+        
+        try (Connection conn = DBContext.getDataSource().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            
+            ps.setInt(1, userId);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Order o = new Order();
+                    o.setId(rs.getInt("order_id"));
+                    o.setUserId(rs.getInt("user_id"));
+                    o.setTotalMoney(rs.getDouble("total_money"));
+                    o.setStatus(rs.getString("status"));
+                    o.setShippingAddress(rs.getString("shipping_address"));
+                    o.setOrderDate(rs.getTimestamp("order_date"));
+                    
+                    list.add(o);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 }

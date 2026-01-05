@@ -1,0 +1,118 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Lịch sử đơn hàng</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <jsp:include page="header.jsp" />
+    <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/icons/favicon.png"/>
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/vendor/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/fonts/iconic/css/material-design-iconic-font.min.css">
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/fonts/linearicons-v1.0.0/icon-font.min.css">
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/vendor/animate/animate.css">
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/vendor/css-hamburgers/hamburgers.min.css">
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/vendor/animsition/css/animsition.min.css">
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/vendor/select2/select2.min.css">
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/vendor/daterangepicker/daterangepicker.css">
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/vendor/slick/slick.css">
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/vendor/MagnificPopup/magnific-popup.css">
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/vendor/perfect-scrollbar/perfect-scrollbar.css">
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/util.css">
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/main.css">
+    <style>
+        .order-status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .status-pending { background-color: #ffeaa7; color: #d35400; } 
+        .status-shipping { background-color: #81ecec; color: #00cec9; } 
+        .status-success { background-color: #55efc4; color: #00b894; }  
+        .status-cancel { background-color: #fab1a0; color: #d63031; }  
+    </style>
+</head>
+<body class="animsition">
+
+    <div class="container">
+        <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
+            <a href="home" class="stext-109 cl8 hov-cl1 trans-04">
+                Trang chủ
+                <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+            </a>
+            <span class="stext-109 cl4">Lịch sử mua hàng</span>
+        </div>
+    </div>
+
+    <div class="bg0 p-t-75 p-b-85">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 m-lr-auto m-b-50">
+                    <div class="m-l-25 m-r--38 m-lr-0-xl">
+                        <h4 class="mtext-109 cl2 p-b-30">Danh sách đơn hàng của bạn</h4>
+                        
+                        <c:if test="${empty listOrders}">
+                            <div class="alert alert-info text-center">
+                                Bạn chưa có đơn hàng nào. <a href="product">Mua sắm ngay!</a>
+                            </div>
+                        </c:if>
+
+                        <c:if test="${not empty listOrders}">
+                            <div class="wrap-table-shopping-cart">
+                                <table class="table-shopping-cart" style="min-width: 100%;">
+                                    <tr class="table_head">
+                                        <th class="column-1 p-l-30">Mã đơn</th>
+                                        <th class="column-2">Ngày đặt</th>
+                                        <th class="column-3">Địa chỉ giao hàng</th>
+                                        <th class="column-4">Tổng tiền</th>
+                                        <th class="column-5">Trạng thái</th>
+                                        </tr>
+
+                                    <c:forEach items="${listOrders}" var="o">
+                                        <tr class="table_row">
+                                            <td class="column-1 p-l-30">
+                                                <strong>#${o.id}</strong>
+                                            </td>
+                                            <td class="column-2">
+                                                <fmt:formatDate value="${o.orderDate}" pattern="dd-MM-yyyy HH:mm"/>
+                                            </td>
+                                            <td class="column-3" style="max-width: 300px;">
+                                                ${o.shippingAddress}
+                                            </td>
+                                            <td class="column-4" style="color: #c0392b; font-weight: bold;">
+                                                <fmt:formatNumber value="${o.totalMoney}" type="number" maxFractionDigits="0"/> đ
+                                            </td>
+                                            <td class="column-5">
+                                                <span class="order-status 
+                                                    ${o.status == 'Chờ xử lý' ? 'status-pending' : ''}
+                                                    ${o.status == 'Đang giao' ? 'status-shipping' : ''}
+                                                    ${o.status == 'Đã giao' ? 'status-success' : ''}
+                                                    ${o.status == 'Đã hủy' ? 'status-cancel' : ''}">
+                                                    ${o.status}
+                                                </span>
+                                            </td>
+                                            </tr>
+                                    </c:forEach>
+                                </table>
+                            </div>
+                        </c:if>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <jsp:include page="footer.jsp" />
+
+    <script src="vendor/jquery/jquery-3.2.1.min.js"></script>
+    <script src="vendor/animsition/js/animsition.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/main.js"></script>
+
+</body>
+</html>
