@@ -3,6 +3,7 @@ package dao;
 import model.Cart;
 import model.CartItem;
 import model.Order;
+import model.OrderDetailInfo;
 import model.User;
 import util.DBContext;
 
@@ -71,6 +72,37 @@ public class OrderDAO {
                     o.setOrderDate(rs.getTimestamp("order_date"));
                     
                     list.add(o);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<OrderDetailInfo> getOrderDetails(int orderId) {
+        List<OrderDetailInfo> list = new ArrayList<>();
+        // Join để lấy Tên sản phẩm, Ảnh và Tên Size
+        String query = "SELECT p.product_name, p.image_url, ps.size_name, d.quantity, d.price " +
+                       "FROM OrderDetails d " +
+                       "JOIN Products p ON d.product_id = p.product_id " +
+                       "JOIN ProductSizes ps ON d.size_id = ps.size_id " +
+                       "WHERE d.order_id = ?";
+        
+        try (Connection conn = DBContext.getDataSource().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            
+            ps.setInt(1, orderId);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(new OrderDetailInfo(
+                        rs.getString("product_name"),
+                        rs.getString("image_url"),
+                        rs.getString("size_name"),
+                        rs.getInt("quantity"),
+                        rs.getDouble("price")
+                    ));
                 }
             }
         } catch (SQLException e) {

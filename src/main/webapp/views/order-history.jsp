@@ -71,6 +71,8 @@
                                         <th class="column-3">Địa chỉ giao hàng</th>
                                         <th class="column-4">Tổng tiền</th>
                                         <th class="column-5">Trạng thái</th>
+                                        <th class="column-5 text-center">Chi tiết</th> </tr>
+                                        
                                         </tr>
 
                                     <c:forEach items="${listOrders}" var="o">
@@ -96,11 +98,43 @@
                                                     ${o.status}
                                                 </span>
                                             </td>
+                                             <td class="column-5 text-center">
+                                                <button class="stext-104 cl2 hov-cl1 trans-04 js-show-detail" data-id="${o.id}">
+                                                    <i class="zmdi zmdi-eye" style="font-size: 20px;"></i>
+                                                </button>
+                                            </td>
                                             </tr>
                                     </c:forEach>
                                 </table>
                             </div>
                         </c:if>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+     <div class="wrap-modal1 js-modal-detail p-t-60 p-b-20">
+        <div class="overlay-modal1 js-hide-detail"></div>
+        <div class="container">
+            <div class="bg0 p-t-60 p-b-30 p-lr-15-lg how-pos3-parent" style="max-width: 900px; margin: auto;">
+                <button class="how-pos3 hov3 trans-04 js-hide-detail">
+                    <img src="images/icons/icon-close.png" alt="CLOSE">
+                </button>
+
+                <div class="p-l-25 p-r-30 p-lr-0-lg">
+                    <h4 class="mtext-105 cl2 p-b-14">Chi tiết đơn hàng #<span id="modal-order-id"></span></h4>
+                    
+                    <div class="wrap-table-shopping-cart">
+                        <table class="table-shopping-cart">
+                            <tr class="table_head">
+                                <th class="column-1">Sản phẩm</th>
+                                <th class="column-2">Thông tin</th>
+                                <th class="column-3">Giá</th>
+                                <th class="column-4 text-center">Số lượng</th>
+                                <th class="column-5">Thành tiền</th>
+                            </tr>
+                            <tbody id="order-detail-content"></tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -113,6 +147,39 @@
     <script src="vendor/animsition/js/animsition.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
     <script src="js/main.js"></script>
+    
+    <script>
+        // Khi nhấn nút mắt 
+        $('.js-show-detail').on('click', function(e){
+            e.preventDefault();
+            var orderId = $(this).data('id');
+            
+            // Set ID lên tiêu đề
+            $('#modal-order-id').text(orderId);
+            $('#order-detail-content').html('<tr><td colspan="5" class="text-center p-3">Đang tải dữ liệu...</td></tr>');
+
+            $.ajax({
+                url: "order-details",
+                type: "GET",
+                data: { id: orderId },
+                success: function(response) {
+                    $('#order-detail-content').html(response);
+                },
+                error: function() {
+                    $('#order-detail-content').html('<tr><td colspan="5" class="text-center text-danger">Lỗi tải dữ liệu!</td></tr>');
+                }
+            });
+
+            // Hiện Modal
+            $('.js-modal-detail').addClass('show-modal1');
+        });
+
+        // Ẩn Modal
+        $('.js-hide-detail').on('click', function(){
+            $('.js-modal-detail').removeClass('show-modal1');
+        });
+    </script>
+   
 
 </body>
 </html>
