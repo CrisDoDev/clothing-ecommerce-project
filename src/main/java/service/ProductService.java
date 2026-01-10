@@ -61,8 +61,12 @@ public class ProductService {
     }
     
  // (ADMIN) Các hàm CRUD
-    public void insertProduct(Product p) {
-        productDAO.insertProduct(p);
+    public int insertProduct(Product p) {
+       return productDAO.insertProduct(p);
+    }
+    
+    public void insertProductSize(int productId, String sizeName, int quantity) {
+        productDAO.insertProductSize(productId, sizeName, quantity);
     }
 
     public void updateProduct(Product p) {
@@ -75,6 +79,22 @@ public class ProductService {
     
     public void updateStock(int sizeId, int newQuantity) {
         productDAO.updateStock(sizeId, newQuantity);
+    }
+    
+    public void softDeleteProduct(int id) {
+    	productDAO.softDeleteProduct(id);
+    }
+    
+    public void restoreProduct(int id) {
+    	productDAO.restoreProduct(id);
+    }
+    
+    public void permanentlyDeleteProduct(int id) {
+    	productDAO.permanentlyDeleteProduct(id);
+    }
+    
+    public List<Product> getAllProductsForAdmin() {
+    	return productDAO.getAllProductsForAdmin();
     }
 
     
