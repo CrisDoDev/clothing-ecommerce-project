@@ -59,6 +59,23 @@ public class ProductService {
     public List<Product> searchByName(String s) {
     	return productDAO.searchByName(s);
     }
+    
+ // (ADMIN) Các hàm CRUD
+    public void insertProduct(Product p) {
+        productDAO.insertProduct(p);
+    }
+
+    public void updateProduct(Product p) {
+        productDAO.updateProduct(p);
+    }
+
+    public void deleteProduct(int id) {
+        productDAO.deleteProduct(id);
+    }
+    
+    public void updateStock(int sizeId, int newQuantity) {
+        productDAO.updateStock(sizeId, newQuantity);
+    }
 
     
 }

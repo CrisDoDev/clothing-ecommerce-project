@@ -4,11 +4,13 @@ import dao.OrderDAO;
 import dao.ProductDAO;
 import model.Cart;
 import model.CartItem;
+import model.OrderDetailInfo;
 import model.User;
 import util.DBContext;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 public class OrderService {
     private final OrderDAO orderDAO = new OrderDAO();
@@ -70,5 +72,19 @@ public class OrderService {
                 }
             }
         }
+    }
+    
+ // (ADMIN) Lấy danh sách đơn hàng
+    public List<model.Order> getAllOrders(String status) {
+        return orderDAO.getAllOrders(status);
+    }
+
+    // (ADMIN) Cập nhật trạng thái
+    public void updateOrderStatus(int orderId, String status) {
+        orderDAO.updateOrderStatus(orderId, status);
+    }
+    
+    public List<OrderDetailInfo> getOrderDetails(int orderId) {
+        return orderDAO.getOrderDetails(orderId);
     }
 }

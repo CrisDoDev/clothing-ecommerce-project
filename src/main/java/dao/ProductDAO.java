@@ -283,4 +283,75 @@ public class ProductDAO {
             return rows > 0; // Nếu rows = 0 nghĩa là không thỏa mãn điều kiện WHERE -> Trả về false
         }
     }
+    
+ // (ADMIN) Thêm sản phẩm mới
+    public void insertProduct(Product p) {
+        String query = "INSERT INTO Products (product_name, description, price, image_url, category_id, created_date) VALUES (?, ?, ?, ?, ?, GETDATE())";     
+        try (Connection conn = this.dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {             
+            ps.setString(1, p.getName());
+            ps.setString(2, p.getDescription());
+            ps.setDouble(3, p.getPrice());
+            ps.setString(4, p.getImageUrl());
+            ps.setInt(5, p.getCategoryId());
+            
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // (ADMIN) Cập nhật sản phẩm
+    public void updateProduct(Product p) {
+        String query = "UPDATE Products SET product_name=?, description=?, price=?, category_id=? WHERE product_id=?";
+        if (p.getImageUrl() != null && !p.getImageUrl().isEmpty()) {
+             query = "UPDATE Products SET product_name=?, description=?, price=?, category_id=?, image_url=? WHERE product_id=?";
+        }
+        
+        try (Connection conn = this.dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+             
+            ps.setString(1, p.getName());
+            ps.setString(2, p.getDescription());
+            ps.setDouble(3, p.getPrice());
+            ps.setInt(4, p.getCategoryId());
+            
+            if (p.getImageUrl() != null && !p.getImageUrl().isEmpty()) {
+                ps.setString(5, p.getImageUrl());
+                ps.setInt(6, p.getId());
+            } else {
+                ps.setInt(5, p.getId());
+            }
+            
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // (ADMIN) Xóa sản phẩm
+    public void deleteProduct(int id) {
+        String query = "DELETE FROM Products WHERE product_id = ?";
+        try (Connection conn = this.dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+ // [ADMIN] Cập nhật số lượng tồn kho cho một Size cụ thể
+    public void updateStock(int sizeId, int newQuantity) {
+        String query = "UPDATE ProductSizes SET stock_quantity = ? WHERE size_id = ?";        
+        try (Connection conn = this.dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {            
+            ps.setInt(1, newQuantity);
+            ps.setInt(2, sizeId);           
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
