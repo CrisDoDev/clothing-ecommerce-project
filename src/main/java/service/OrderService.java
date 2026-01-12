@@ -4,6 +4,7 @@ import dao.OrderDAO;
 import dao.ProductDAO;
 import model.Cart;
 import model.CartItem;
+import model.Order;
 import model.OrderDetailInfo;
 import model.User;
 import util.DBContext;
@@ -86,5 +87,9 @@ public class OrderService {
     
     public List<OrderDetailInfo> getOrderDetails(int orderId) {
         return orderDAO.getOrderDetails(orderId);
+    }
+    
+    public Order getOrderById(int orderId) {
+    	return orderDAO.getOrderById(orderId);
     }
 }

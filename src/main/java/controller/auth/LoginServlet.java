@@ -34,8 +34,12 @@ public class LoginServlet extends HttpServlet {
 			HttpSession session = request.getSession();
 			session.setAttribute("user", user);
 			session.setMaxInactiveInterval(30 * 60);
-
-			response.sendRedirect(request.getContextPath() + "/home");
+			
+			if (user.getRoleId() == 1) {
+		        response.sendRedirect(request.getContextPath() + "/admin/dashboard");
+		    } else {
+		        response.sendRedirect(request.getContextPath() + "/home");
+		    }
 
 		} else {
 			request.setAttribute("errorMessage", "Sai thông tin đăng nhập!");

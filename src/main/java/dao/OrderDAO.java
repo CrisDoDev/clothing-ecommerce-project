@@ -17,7 +17,7 @@ public class OrderDAO {
 	// Nhận Connection từ Service để dùng chung Transaction
 	public int insertOrder(Connection conn, User user, Cart cart, String address) throws SQLException {
 
-		String query = "INSERT INTO Orders (user_id, total_money, shipping_address, status, order_date) VALUES (?, ?, ?, N'Chờ xử lý', GETDATE())";
+		String query = "INSERT INTO Orders (user_id, total_money, shipping_address, status, order_date) VALUES (?, ?, ?, N'Đã xác nhận', GETDATE())";
 
 		try (PreparedStatement ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
 			ps.setInt(1, user.getId());
@@ -155,5 +155,33 @@ public class OrderDAO {
 			e.printStackTrace();
 		}
 	}
+	
+	// Lấy thông tin 1 đơn hàng theo ID
+		public Order getOrderById(int orderId) {
+			String query = "SELECT * FROM Orders WHERE order_id = ?";
+			try (Connection conn = DBContext.getDataSource().getConnection();
+				 PreparedStatement ps = conn.prepareStatement(query)) {
+				
+				ps.setInt(1, orderId);
+				
+				try (ResultSet rs = ps.executeQuery()) {
+					if (rs.next()) {
+						Order o = new Order();
+						o.setId(rs.getInt("order_id"));
+						o.setUserId(rs.getInt("user_id"));
+						o.setTotalMoney(rs.getDouble("total_money"));
+						o.setStatus(rs.getString("status"));
+						o.setShippingAddress(rs.getString("shipping_address"));
+						o.setOrderDate(rs.getTimestamp("order_date"));
+						return o;
+					}
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+	
+	
 
 }

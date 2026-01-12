@@ -77,8 +77,16 @@ public class ProductService {
         productDAO.deleteProduct(id);
     }
     
+    public void updateProductSize(int sizeId, String sizeName, int quantity) {
+        productDAO.updateProductSize(sizeId, sizeName, quantity);
+    }
+    
     public void updateStock(int sizeId, int newQuantity) {
         productDAO.updateStock(sizeId, newQuantity);
+    }
+    
+    public void restoreStockForOrder(int orderId) {
+        productDAO.restoreStockForOrder(orderId);
     }
     
     public void softDeleteProduct(int id) {
@@ -89,12 +97,16 @@ public class ProductService {
     	productDAO.restoreProduct(id);
     }
     
-    public void permanentlyDeleteProduct(int id) {
-    	productDAO.permanentlyDeleteProduct(id);
+    public boolean permanentlyDeleteProduct(int id) {
+        return productDAO.permanentlyDeleteProduct(id);
     }
     
     public List<Product> getAllProductsForAdmin() {
     	return productDAO.getAllProductsForAdmin();
+    }
+    
+    public void deleteProductSize(int sizeId) {
+        productDAO.deleteProductSize(sizeId);
     }
 
     

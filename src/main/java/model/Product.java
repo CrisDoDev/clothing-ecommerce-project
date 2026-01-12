@@ -1,5 +1,8 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Product {
 	private int product_id;
 	private String name;
@@ -7,12 +10,13 @@ public class Product {
 	private double price;
 	private String imageUrl;
 	private int categoryId;
+	private boolean isDeleted;
+	private List<ProductSizes> listSizes = new ArrayList<>();
 
 	public Product() {
 	}
 
-	public Product(int product_id, String name, String description, double price, String imageUrl,
-			int categoryId) {
+	public Product(int product_id, String name, String description, double price, String imageUrl, int categoryId) {
 		this.product_id = product_id;
 		this.name = name;
 		this.description = description;
@@ -67,6 +71,30 @@ public class Product {
 
 	public void setCategoryId(int categoryId) {
 		this.categoryId = categoryId;
+	}
+
+	public int getProduct_id() {
+		return product_id;
+	}
+
+	public void setProduct_id(int product_id) {
+		this.product_id = product_id;
+	}
+
+	public boolean isDeleted() {
+		return isDeleted;
+	}
+
+	public void setDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
+
+	public List<ProductSizes> getListSizes() {
+		return listSizes;
+	}
+
+	public void setListSizes(List<ProductSizes> listSizes) {
+		this.listSizes = listSizes;
 	}
 
 	@Override
