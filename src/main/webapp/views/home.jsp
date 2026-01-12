@@ -210,6 +210,66 @@
     </div>
 </div>
 			</div>
+			<%-- Bắt đầu vùng Filter --%>
+				<div class="dis-none panel-filter w-full p-t-10">
+					<div class="wrap-filter flex-w bg6 w-full p-lr-40 p-t-27 p-lr-15-sm">
+
+						<%-- Cột 1: Sắp xếp --%>
+						<div class="filter-col1 p-r-15 p-b-27">
+							<div class="mtext-102 cl2 p-b-15">Sắp xếp theo</div>
+							<ul>
+								<li class="p-b-6"><a
+									href="product?cid=${tag}&price=${price}&sort=default"
+									class="filter-link stext-106 trans-04 ${sort == 'default' || sort == null ? 'filter-link-active' : ''}">
+										Mặc định </a></li>
+								<li class="p-b-6"><a
+									href="product?cid=${tag}&price=${price}&sort=newest"
+									class="filter-link stext-106 trans-04 ${sort == 'newest' ? 'filter-link-active' : ''}">
+										Mới nhất </a></li>
+								<li class="p-b-6"><a
+									href="product?cid=${tag}&price=${price}&sort=price_asc"
+									class="filter-link stext-106 trans-04 ${sort == 'price_asc' ? 'filter-link-active' : ''}">
+										Giá: Thấp đến Cao </a></li>
+								<li class="p-b-6"><a
+									href="product?cid=${tag}&price=${price}&sort=price_desc"
+									class="filter-link stext-106 trans-04 ${sort == 'price_desc' ? 'filter-link-active' : ''}">
+										Giá: Cao đến Thấp </a></li>
+							</ul>
+						</div>
+
+						<%-- Cột 2: Lọc Giá --%>
+						<div class="filter-col2 p-r-15 p-b-27">
+							<div class="mtext-102 cl2 p-b-15">Giá</div>
+							<ul>
+								<li class="p-b-6"><a
+									href="product?cid=${tag}&sort=${sort}&price=all"
+									class="filter-link stext-106 trans-04 ${price == 'all' || price == null ? 'filter-link-active' : ''}">
+										Tất cả </a></li>
+								<li class="p-b-6"><a
+									href="product?cid=${tag}&sort=${sort}&price=0-200000"
+									class="filter-link stext-106 trans-04 ${price == '0-200000' ? 'filter-link-active' : ''}">
+										0 - 200.000 VND </a></li>
+								<li class="p-b-6"><a
+									href="product?cid=${tag}&sort=${sort}&price=200000-500000"
+									class="filter-link stext-106 trans-04 ${price == '200000-500000' ? 'filter-link-active' : ''}">
+										200.000 - 500.000 VND </a></li>
+								<li class="p-b-6"><a
+									href="product?cid=${tag}&sort=${sort}&price=500000-1000000"
+									class="filter-link stext-106 trans-04 ${price == '500000-1000000' ? 'filter-link-active' : ''}">
+										500.000 - 1.000.000 VND </a></li>
+								<li class="p-b-6"><a
+									href="product?cid=${tag}&sort=${sort}&price=1000000-2000000"
+									class="filter-link stext-106 trans-04 ${price == '1000000-2000000' ? 'filter-link-active' : ''}">
+										1.000.000 - 2.000.000 VND </a></li>
+								<li class="p-b-6"><a
+									href="product?cid=${tag}&sort=${sort}&price=2000000-"
+									class="filter-link stext-106 trans-04 ${price == '2000000-' ? 'filter-link-active' : ''}">
+										Trên 2.000.000 VND </a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<%-- Kết thúc vùng Filter --%>			
 
 			<div class="row isotope-grid">
 				<c:forEach items="${listProduct}" var="p">
