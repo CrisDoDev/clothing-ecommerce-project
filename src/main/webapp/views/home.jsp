@@ -193,14 +193,22 @@
 					</div>
 				</div>
 				
-				<div class="dis-none panel-search w-full p-t-10 p-b-15">
-					<div class="bor8 dis-flex p-l-15">
-						<button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04">
-							<i class="zmdi zmdi-search"></i>
-						</button>
-						<input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="search-product" placeholder="Search">
-					</div>	
-				</div>
+<div class="dis-none panel-search w-full p-t-10 p-b-15">
+    <div class="bor8 dis-flex p-l-15">
+        <button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04">
+            <i class="zmdi zmdi-search"></i>
+        </button>
+
+        <%-- THÊM id="search-input" VÀO ĐÂY --%>
+        <input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="search-product" placeholder="Search" id="search-input" autocomplete="off">
+    </div>
+
+    <%-- THÊM KHUNG HIỂN THỊ KẾT QUẢ VÀO ĐÂY --%>
+    <div class="search-result-container" id="search-results" style="display: none;">
+        <ul class="header-cart-wrapitem w-full" id="search-result-list">
+        </ul>
+    </div>
+</div>
 			</div>
 
 			<div class="row isotope-grid">
@@ -208,8 +216,8 @@
 					<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women">
 						<div class="block2">
 							<div class="block2-pic hov-img0">
-								<img src="${pageContext.request.contextPath}/images/${p.imageUrl}" alt="IMG-PRODUCT">
-
+								<img src="${pageContext.request.contextPath}/images/${p.imageUrl}" class="card-img-top product-img-fixed" alt="${p.name}">
+										
 								<a href="#" 
 								   class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1"
 								   data-id="${p.id}"
@@ -508,6 +516,67 @@
         if (max && val > max) {
             $(this).val(max);
         }
+    });
+</script>
+
+<style>				
+    .search-result-container {
+        background: white;
+        border: 1px solid #e6e6e6;
+        position: absolute; 
+        z-index: 9999;
+        width: 100%;
+        max-width: 1170px; 
+        max-height: 400px;
+        overflow-y: auto;
+        box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        padding: 15px;
+        margin-top: 5px;
+    }
+
+    .header-cart-item-img {
+        width: 60px;
+        margin-right: 20px;
+    }
+</style>
+
+<script>
+    $(document).ready(function(){
+        var timeout = null; 
+
+        $("#search-input").on("input", function() {
+            var txt = $(this).val().trim();
+            
+            clearTimeout(timeout);
+
+            timeout = setTimeout(function() {
+                
+                if (txt === "") {
+                    $("#search-results").fadeOut();
+                    return;
+                }
+
+                $.ajax({
+                    url: "search", 
+                    type: "GET",
+                    data: { txt: txt },
+                    success: function(data) {
+                        $("#search-result-list").html(data);
+                        $("#search-results").fadeIn();
+                    },
+                    error: function(xhr) {
+                        console.log("Lỗi tìm kiếm");
+                    }
+                });
+
+            }, 500); 
+        });
+
+        $(document).on("click", function(e) {
+            if (!$(e.target).closest(".panel-search").length) {
+                $("#search-results").fadeOut();
+            }
+        });
     });
 </script>
 </body>

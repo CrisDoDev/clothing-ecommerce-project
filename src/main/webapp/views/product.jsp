@@ -185,9 +185,8 @@
 					<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women">
 						<div class="block2">
 							<div class="block2-pic hov-img0">
-								<img
-									src="${pageContext.request.contextPath}/images/${p.imageUrl}"
-									alt="IMG-PRODUCT"> <a href="#"
+								<img src="${pageContext.request.contextPath}/images/${p.imageUrl}" class="card-img-top product-img-fixed" alt="${p.name}">
+								<a href="#"
 									class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1"
 									data-id="${p.id}" data-name="${p.name}" data-price="${p.price}"
 									data-desc="${p.description}"
