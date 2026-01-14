@@ -18,61 +18,40 @@ public class OrderService {
     private final ProductDAO productDAO = new ProductDAO();
 
     //Xử lý Transaction mua hàng
-    public boolean placeOrder(User user, Cart cart, String address) {
+    public int placeOrder(User user, Cart cart, String address) {
         Connection conn = null;
         try {
-            
             conn = DBContext.getDataSource().getConnection();
-          
             conn.setAutoCommit(false); 
 
-            // Insert bảng Orders
+            // Insert đơn hàng và lấy ID
             int orderId = orderDAO.insertOrder(conn, user, cart, address);
             
-            // Duyệt giỏ hàng để Insert Details & Trừ kho
-            for (CartItem item : cart.getItems()) {
+            if (orderId == -1) throw new SQLException("Loi Order.");
+
+            // Duyệt giỏ hàng
+            for (model.CartItem item : cart.getItems()) {
                 int productId = item.getProduct().getId();
-                String sizeName = item.getSize();
+                int sizeId = productDAO.getSizeId(productId, item.getSize());
                 
-                // Lấy size_id thực tế từ DB
-                int sizeId = productDAO.getSizeId(productId, sizeName);
-                
-                // Insert vào OrderDetails
                 orderDAO.insertOrderDetail(conn, orderId, productId, sizeId, item.getQuantity(), item.getProduct().getPrice());
                 
-                // Trừ tồn kho (Nếu trừ thất bại Rollback)
-                boolean updateStockSuccess = productDAO.decreaseStock(conn, sizeId, item.getQuantity());
-                if (!updateStockSuccess) {
-                    throw new SQLException("Hết hàng hoặc lỗi tồn kho cho sản phẩm: " + item.getProduct().getName());
+                if (!productDAO.decreaseStock(conn, sizeId, item.getQuantity())) {
+                    throw new SQLException("Hết hàng sản phẩm: " + item.getProduct().getName());
                 }
             }
 
-            // Nếu chạy đến đây ok -> COMMIT
             conn.commit();
-            return true;
+            return orderId; 
 
         } catch (Exception e) {
             e.printStackTrace();
-            // Nếu có lỗi -> ROLLBACK 
-            if (conn != null) {
-                try {
-                    conn.rollback();
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
-            }
-            return false;
+            if (conn != null) try { conn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
+            return -1; 
         } finally {
-            // Đóng kết nối/Trả về pool
-            if (conn != null) {
-                try {
-                    conn.setAutoCommit(true); // Trả lại trạng thái mặc định
-                    conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
+            if (conn != null) try { conn.setAutoCommit(true); conn.close(); } catch (SQLException e) { e.printStackTrace(); }
         }
+    
     }
     
  // (ADMIN) Lấy danh sách đơn hàng

@@ -223,6 +223,20 @@ public class ProductDAO {
 	private Product mapRowToProduct(ResultSet rs) throws SQLException {
 		Product p = new Product(rs.getInt("product_id"), rs.getString("product_name"), rs.getString("description"),
 				rs.getDouble("price"), rs.getString("image_url"), rs.getInt("category_id"));
+		
+		// Add English columns
+		try {
+			p.setNameEn(rs.getString("product_name_en"));
+		} catch (SQLException e) {
+			p.setNameEn(null);
+		}
+		
+		try {
+			p.setDescriptionEn(rs.getString("description_en"));
+		} catch (SQLException e) {
+			p.setDescriptionEn(null);
+		}
+		
 		try {
 			p.setDeleted(rs.getBoolean("is_deleted"));
 		} catch (SQLException e) {

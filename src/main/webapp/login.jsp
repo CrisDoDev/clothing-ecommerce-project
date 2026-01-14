@@ -1,12 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
+<fmt:setLocale value="${sessionScope.locale}" />
+<fmt:setBundle basename="messages" var="msgs" />
+
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="${sessionScope.locale.language}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Đăng nhập</title>
+<title><fmt:message key="login.title" bundle="${msgs}" /></title>
 <link rel="icon" type="image/png" href="images/icons/favicon.png" />
 
 <link rel="stylesheet" type="text/css"
@@ -19,10 +24,12 @@
 <body>
 	<div class="auth-container">
 		<div class="auth-box">
-			<h2 class="auth-title">Đăng nhập</h2>
+			<h2 class="auth-title"><fmt:message key="login.title" bundle="${msgs}" /></h2>
+			
 			<c:if test="${param.status == 'success'}">
-				<div class="alert alert-success" role="alert">Đăng ký tài
-					khoản thành công! Vui lòng đăng nhập để tiếp tục.</div>
+				<div class="alert alert-success" role="alert">
+					<fmt:message key="register.success" bundle="${msgs}" />
+				</div>
 			</c:if>
 
 			<c:if test="${not empty errorMessage}">
@@ -31,35 +38,36 @@
 
 			<form action="login" method="post">
 				<div class="input-group">
-					<label>Tài khoản</label> <input type="text" name="username"
-						class="auth-input" placeholder="Nhập Email của bạn" required>
+					<label><fmt:message key="login.username" bundle="${msgs}" /></label> 
+					<input type="text" name="username" class="auth-input" 
+						   placeholder="<fmt:message key='register.emailPlaceholder' bundle='${msgs}' />" required>
 				</div>
 
 				<div class="input-group">
-					<label>Mật khẩu</label> <input type="password" name="password"
-						class="auth-input" placeholder="Nhập mật khẩu" required>
+					<label><fmt:message key="login.password" bundle="${msgs}" /></label> 
+					<input type="password" name="password" class="auth-input" 
+						   placeholder="<fmt:message key='register.passwordPlaceholder' bundle='${msgs}' />" required>
 				</div>
 
-				<!--<div class="text-right p-b-10"
-					style="margin-bottom: 15px; font-size: 13px;">
-					<a href="#" style="color: #666;">Quên mật khẩu?</a>
-				</div>
-				-->
-
-				<button type="submit" class="auth-btn">Đăng nhập</button>
+				<button type="submit" class="auth-btn">
+					<fmt:message key="login.submit" bundle="${msgs}" />
+				</button>
 			</form>
 
 			<div class="auth-divider">
-				<span>hoặc</span>
+				<span><fmt:message key="common.or" bundle="${msgs}" /></span>
 			</div>
 
 			<div class="auth-link">
-				Chưa có tài khoản? <a href="register.jsp">Đăng ký ngay</a>
+				<fmt:message key="login.noAccount" bundle="${msgs}" /> 
+				<a href="register.jsp"><fmt:message key="login.registerNow" bundle="${msgs}" /></a>
 			</div>
 
 			<div class="back-home">
-				<a href="${pageContext.request.contextPath}/home"><i class="fa fa-arrow-left"></i> Quay
-					lại trang chủ</a>
+				<a href="${pageContext.request.contextPath}/home">
+					<i class="fa fa-arrow-left"></i> 
+					<fmt:message key="login.backToHome" bundle="${msgs}" />
+				</a>
 			</div>
 		</div>
 	</div>

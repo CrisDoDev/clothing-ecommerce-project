@@ -2,11 +2,14 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<fmt:setLocale value="${sessionScope.locale}" />
+<fmt:setBundle basename="messages" var="msgs" />
+<c:set var="lang" value="${sessionScope.lang != null ? sessionScope.lang : 'vi'}" />
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Cửa Hàng Thời Trang</title>
+<title><fmt:message key="product.title" bundle="${msgs}" /> - <fmt:message key="header.shopName" bundle="${msgs}" /></title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" type="image/png"
@@ -50,7 +53,7 @@
 				<div class="flex-w flex-l-m filter-tope-group m-tb-10">
 					<a href="product"
 						class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 ${tag == null ? 'how-active1' : ''}">
-						Tất cả sản phẩm </a>
+						<fmt:message key="product.allProducts" bundle="${msgs}" /> </a>
 
 					<c:forEach items="${listCategory}" var="c">
 						<a href="product?cid=${c.id}"
@@ -124,7 +127,7 @@
 
 						<%-- Cột 1: Sắp xếp --%>
 						<div class="filter-col1 p-r-15 p-b-27">
-							<div class="mtext-102 cl2 p-b-15">Sắp xếp theo</div>
+							<div class="mtext-102 cl2 p-b-15"><fmt:message key="product.sortBy" bundle="${msgs}" /></div>
 							<ul>
 								<li class="p-b-6"><a
 									href="product?cid=${tag}&price=${price}&sort=default"
@@ -137,7 +140,7 @@
 								<li class="p-b-6"><a
 									href="product?cid=${tag}&price=${price}&sort=price_asc"
 									class="filter-link stext-106 trans-04 ${sort == 'price_asc' ? 'filter-link-active' : ''}">
-										Giá: Thấp đến Cao </a></li>
+										<fmt:message key="product.priceAsc" bundle="${msgs}" /> </a></li>
 								<li class="p-b-6"><a
 									href="product?cid=${tag}&price=${price}&sort=price_desc"
 									class="filter-link stext-106 trans-04 ${sort == 'price_desc' ? 'filter-link-active' : ''}">
@@ -147,7 +150,7 @@
 
 						<%-- Cột 2: Lọc Giá --%>
 						<div class="filter-col2 p-r-15 p-b-27">
-							<div class="mtext-102 cl2 p-b-15">Giá</div>
+							<div class="mtext-102 cl2 p-b-15"><fmt:message key="product.price" bundle="${msgs}" /></div>
 							<ul>
 								<li class="p-b-6"><a
 									href="product?cid=${tag}&sort=${sort}&price=all"
@@ -185,7 +188,7 @@
 					<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women">
 						<div class="block2">
 							<div class="block2-pic hov-img0">
-								<img src="${pageContext.request.contextPath}/images/${p.imageUrl}" class="card-img-top product-img-fixed" alt="${p.name}">
+								<img src="${pageContext.request.contextPath}/images/${p.imageUrl}" class="card-img-top product-img-fixed" alt="${lang == 'en' ? p.nameEn : p.name}">
 								<a href="#"
 									class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1"
 									data-id="${p.id}" data-name="${p.name}" data-price="${p.price}"

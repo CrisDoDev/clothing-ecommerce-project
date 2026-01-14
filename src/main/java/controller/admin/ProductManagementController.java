@@ -9,6 +9,9 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
+
+import controller.BaseController;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,7 +25,7 @@ import java.util.List;
     maxFileSize = 1024 * 1024 * 10,     
     maxRequestSize = 1024 * 1024 * 50    
 )
-public class ProductManagementController extends HttpServlet {
+public class ProductManagementController extends BaseController {
 
     private final ProductService productService = new ProductService();
     private final CategoryService categoryService = new CategoryService();
@@ -31,18 +34,20 @@ public class ProductManagementController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
+        
+        // Sử dụng logic i18n tập trung từ BaseController
+        setMessages(request);
+
         String action = request.getParameter("action");
         
         try {
             if ("delete".equals(action)) {
-                //Xóa mềm
                 String id = request.getParameter("id");
                 productService.softDeleteProduct(Integer.parseInt(id)); 
                 response.sendRedirect("products?message=soft_deleted");
                 
             } else if ("destroy".equals(action)) {
-            	// Xóa vĩnh viễn
-                int id = Integer.parseInt(request.getParameter("id"));               
+                int id = Integer.parseInt(request.getParameter("id"));                
                 boolean isDeleted = productService.permanentlyDeleteProduct(id);                
                 if (isDeleted) {
                     response.sendRedirect("products?message=destroyed");
@@ -51,7 +56,6 @@ public class ProductManagementController extends HttpServlet {
                 }
                 
             } else if ("restore".equals(action)) {
-                //Khôi phục
                 String id = request.getParameter("id");
                 productService.restoreProduct(Integer.parseInt(id));
                 response.sendRedirect("products?message=restored");
@@ -108,13 +112,12 @@ public class ProductManagementController extends HttpServlet {
             String finalImageName = null;
 
             if (fileName != null && !fileName.isEmpty()) {
-                // Có upload ảnh mới
                 if (!fileName.toLowerCase().endsWith(".jpg") && !fileName.toLowerCase().endsWith(".png") && !fileName.toLowerCase().endsWith(".jpeg")) {
                     errors.add("Chỉ chấp nhận file ảnh (JPG, PNG).");
                 } else {
                     String tomcatPath = getServletContext().getRealPath("") + File.separator + "images";
-                    saveFile(filePart, tomcatPath, fileName);                   
-                  //Đổi thành đường dẫn đến folder image của project trên máy
+                    saveFile(filePart, tomcatPath, fileName);                       
+                    
                     String projectPath = "D:\\Java\\Java Web Programming\\eclipse\\Workspace\\clothing-ecommerce-project\\src\\main\\webapp\\images"; 
                     saveFile(filePart, projectPath, fileName);
                     
@@ -128,7 +131,6 @@ public class ProductManagementController extends HttpServlet {
                 }
             }
 
-            //VALIDATE SIZE 
             String[] quantities = request.getParameterValues("size_quantities");
             if (quantities != null) {
                 for (String qty : quantities) {
@@ -168,7 +170,6 @@ public class ProductManagementController extends HttpServlet {
                 response.sendRedirect("products?message=updated");
             } 
             else {
-                // INSERT
                 Product p = new Product();
                 p.setName(name);
                 p.setPrice(price);
@@ -192,7 +193,6 @@ public class ProductManagementController extends HttpServlet {
         }
     }
 
-
     private void handleProductSizes(HttpServletRequest request, int productId, boolean isUpdate) {
         List<model.ProductSizes> currentDbSizes = new ArrayList<>();
         if (isUpdate) {
@@ -209,7 +209,7 @@ public class ProductManagementController extends HttpServlet {
                 String sizeName = sizes[i].trim();
                 if (!sizeName.isEmpty()) {
                     int qty = 0;
-                    try { qty = Integer.parseInt(quantities[i]); } catch (Exception e) {}                          
+                    try { qty = Integer.parseInt(quantities[i]); } catch (Exception e) {}                             
                     
                     int sizeId = 0;
                     if (isUpdate && sizeIds != null && i < sizeIds.length && !sizeIds[i].isEmpty()) {
@@ -236,7 +236,6 @@ public class ProductManagementController extends HttpServlet {
         }
     }
     
-    // Hàm hỗ trợ lưu file
     private void saveFile(Part filePart, String path, String fileName) throws IOException {
         File uploadDir = new File(path);
         if (!uploadDir.exists()) uploadDir.mkdirs();     

@@ -2,10 +2,14 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
+<fmt:setLocale value="${sessionScope.locale}" />
+<fmt:setBundle basename="messages" var="msgs" />
+<c:set var="lang" value="${sessionScope.lang != null ? sessionScope.lang : 'vi'}" />
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Trang chủ</title>
+	<title><fmt:message key="home.title" bundle="${msgs}" /></title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/icons/favicon.png"/>
@@ -48,7 +52,7 @@
 								
 							<div class="layer-slick1 animated visible-false" data-appear="zoomIn" data-delay="1600">
 								<a href="product" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04">
-									Shop Now
+									<fmt:message key="home.shopNow" bundle="${msgs}" />
 								</a>
 							</div>
 						</div>
@@ -72,7 +76,7 @@
 								
 							<div class="layer-slick1 animated visible-false" data-appear="slideInUp" data-delay="1600">
 								<a href="product" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04">
-									Shop Now
+									<fmt:message key="home.shopNow" bundle="${msgs}" />
 								</a>
 							</div>
 						</div>
@@ -96,7 +100,7 @@
 								
 							<div class="layer-slick1 animated visible-false" data-appear="rotateIn" data-delay="1600">
 								<a href="product" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04">
-									Shop Now
+									<fmt:message key="home.shopNow" bundle="${msgs}" />
 								</a>
 							</div>
 						</div>
@@ -115,11 +119,11 @@
 						<img src="${pageContext.request.contextPath}/images/banner-01.jpg" alt="IMG-BANNER">
 						<a href="product" class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
 							<div class="block1-txt-child1 flex-col-l">
-								<span class="block1-name ltext-102 trans-04 p-b-8">Women</span>
+								<span class="block1-name ltext-102 trans-04 p-b-8"><fmt:message key="category.women" bundle="${msgs}" /></span>
 								<span class="block1-info stext-102 trans-04">Spring 2024</span>
 							</div>
 							<div class="block1-txt-child2 p-b-4 trans-05">
-								<div class="block1-link stext-101 cl0 trans-09">Shop Now</div>
+								<div class="block1-link stext-101 cl0 trans-09"><fmt:message key="home.shopNow" bundle="${msgs}" /></div>
 							</div>
 						</a>
 					</div>
@@ -130,11 +134,11 @@
 						<img src="${pageContext.request.contextPath}/images/banner-02.jpg" alt="IMG-BANNER">
 						<a href="product" class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
 							<div class="block1-txt-child1 flex-col-l">
-								<span class="block1-name ltext-102 trans-04 p-b-8">Men</span>
+								<span class="block1-name ltext-102 trans-04 p-b-8"><fmt:message key="category.men" bundle="${msgs}" /></span>
 								<span class="block1-info stext-102 trans-04">Spring 2024</span>
 							</div>
 							<div class="block1-txt-child2 p-b-4 trans-05">
-								<div class="block1-link stext-101 cl0 trans-09">Shop Now</div>
+								<div class="block1-link stext-101 cl0 trans-09"><fmt:message key="home.shopNow" bundle="${msgs}" /></div>
 							</div>
 						</a>
 					</div>
@@ -145,11 +149,11 @@
 						<img src="${pageContext.request.contextPath}/images/banner-03.jpg" alt="IMG-BANNER">
 						<a href="product" class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
 							<div class="block1-txt-child1 flex-col-l">
-								<span class="block1-name ltext-102 trans-04 p-b-8">Accessories</span>
+								<span class="block1-name ltext-102 trans-04 p-b-8"><fmt:message key="category.accessories" bundle="${msgs}" /></span>
 								<span class="block1-info stext-102 trans-04">New Trend</span>
 							</div>
 							<div class="block1-txt-child2 p-b-4 trans-05">
-								<div class="block1-link stext-101 cl0 trans-09">Shop Now</div>
+								<div class="block1-link stext-101 cl0 trans-09"><fmt:message key="home.shopNow" bundle="${msgs}" /></div>
 							</div>
 						</a>
 					</div>
@@ -163,19 +167,22 @@
 		<div class="container">
 			<div class="p-b-10">
 				<h3 class="ltext-103 cl5">
-					Product Overview
+					<c:choose>
+						<c:when test="${sessionScope.lang == 'en'}">Product Overview</c:when>
+						<c:otherwise>Tổng quan Sản phẩm</c:otherwise>
+					</c:choose>
 				</h3>
 			</div>
 
 			<div class="flex-w flex-sb-m p-b-52">
 				<div class="flex-w flex-l-m filter-tope-group m-tb-10">
 					<a href="home" class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 ${tag == null ? 'how-active1' : ''}">
-						Tất cả sản phẩm
+						<fmt:message key="product.allProducts" bundle="${msgs}" />
 					</a>
 
 					<c:forEach items="${listCategory}" var="c">
 						<a href="category?cid=${c.id}" class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 ${tag == c.id ? 'how-active1' : ''}">
-							${c.name}
+							${sessionScope.lang == 'en' ? c.nameEn : c.name}
 						</a>
 					</c:forEach>
 				</div>
@@ -184,12 +191,12 @@
 					<div class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4 js-show-filter">
 						<i class="icon-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-filter-list"></i>
 						<i class="icon-close-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
-						 Filter
+						 <fmt:message key="button.filter" bundle="${msgs}" />
 					</div>
 					<div class="flex-c-m stext-106 cl6 size-105 bor4 pointer hov-btn3 trans-04 m-tb-4 js-show-search">
 						<i class="icon-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-search"></i>
 						<i class="icon-close-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
-						Search
+						<fmt:message key="button.search" bundle="${msgs}" />
 					</div>
 				</div>
 				
@@ -200,7 +207,7 @@
         </button>
 
         <%-- THÊM id="search-input" VÀO ĐÂY --%>
-        <input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="search-product" placeholder="Search" id="search-input" autocomplete="off">
+        <input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="search-product" placeholder="<fmt:message key='header.searchPlaceholder' bundle='${msgs}' />" id="search-input" autocomplete="off">
     </div>
 
     <%-- THÊM KHUNG HIỂN THỊ KẾT QUẢ VÀO ĐÂY --%>
@@ -216,35 +223,35 @@
 
 						<%-- Cột 1: Sắp xếp --%>
 						<div class="filter-col1 p-r-15 p-b-27">
-							<div class="mtext-102 cl2 p-b-15">Sắp xếp theo</div>
+							<div class="mtext-102 cl2 p-b-15"><fmt:message key="product.sortBy" bundle="${msgs}" /></div>
 							<ul>
 								<li class="p-b-6"><a
 									href="product?cid=${tag}&price=${price}&sort=default"
 									class="filter-link stext-106 trans-04 ${sort == 'default' || sort == null ? 'filter-link-active' : ''}">
-										Mặc định </a></li>
+										<fmt:message key="product.default" bundle="${msgs}" /> </a></li>
 								<li class="p-b-6"><a
 									href="product?cid=${tag}&price=${price}&sort=newest"
 									class="filter-link stext-106 trans-04 ${sort == 'newest' ? 'filter-link-active' : ''}">
-										Mới nhất </a></li>
+										<c:choose><c:when test="${sessionScope.lang == 'en'}">Newest</c:when><c:otherwise>Mới nhất</c:otherwise></c:choose> </a></li>
 								<li class="p-b-6"><a
 									href="product?cid=${tag}&price=${price}&sort=price_asc"
 									class="filter-link stext-106 trans-04 ${sort == 'price_asc' ? 'filter-link-active' : ''}">
-										Giá: Thấp đến Cao </a></li>
+										<fmt:message key="product.priceAsc" bundle="${msgs}" /> </a></li>
 								<li class="p-b-6"><a
 									href="product?cid=${tag}&price=${price}&sort=price_desc"
 									class="filter-link stext-106 trans-04 ${sort == 'price_desc' ? 'filter-link-active' : ''}">
-										Giá: Cao đến Thấp </a></li>
+										<fmt:message key="product.priceDesc" bundle="${msgs}" /> </a></li>
 							</ul>
 						</div>
 
 						<%-- Cột 2: Lọc Giá --%>
 						<div class="filter-col2 p-r-15 p-b-27">
-							<div class="mtext-102 cl2 p-b-15">Giá</div>
+							<div class="mtext-102 cl2 p-b-15"><fmt:message key="product.price" bundle="${msgs}" /></div>
 							<ul>
 								<li class="p-b-6"><a
 									href="product?cid=${tag}&sort=${sort}&price=all"
 									class="filter-link stext-106 trans-04 ${price == 'all' || price == null ? 'filter-link-active' : ''}">
-										Tất cả </a></li>
+										<fmt:message key="product.allPrices" bundle="${msgs}" /> </a></li>
 								<li class="p-b-6"><a
 									href="product?cid=${tag}&sort=${sort}&price=0-200000"
 									class="filter-link stext-106 trans-04 ${price == '0-200000' ? 'filter-link-active' : ''}">
@@ -264,7 +271,7 @@
 								<li class="p-b-6"><a
 									href="product?cid=${tag}&sort=${sort}&price=2000000-"
 									class="filter-link stext-106 trans-04 ${price == '2000000-' ? 'filter-link-active' : ''}">
-										Trên 2.000.000 VND </a></li>
+										<c:choose><c:when test="${sessionScope.lang == 'en'}">Over 2,000,000 VND</c:when><c:otherwise>Trên 2.000.000 VND</c:otherwise></c:choose> </a></li>
 							</ul>
 						</div>
 					</div>
@@ -276,23 +283,25 @@
 					<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women">
 						<div class="block2">
 							<div class="block2-pic hov-img0">
-								<img src="${pageContext.request.contextPath}/images/${p.imageUrl}" class="card-img-top product-img-fixed" alt="${p.name}">
+								<img src="${pageContext.request.contextPath}/images/${p.imageUrl}" class="card-img-top product-img-fixed" alt="${lang == 'en' ? p.nameEn : p.name}">
 										
 								<a href="#" 
 								   class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1"
 								   data-id="${p.id}"
 								   data-name="${p.name}"
+   data-name-en="${p.nameEn}"
 								   data-price="${p.price}"
 								   data-desc="${p.description}"
+   data-desc-en="${p.descriptionEn}"
 								   data-img="${pageContext.request.contextPath}/images/${p.imageUrl}">
-									Quick View
+									<fmt:message key="home.quickView" bundle="${msgs}" />
 								</a>
 							</div>
 
 							<div class="block2-txt flex-w flex-t p-t-14">
 								<div class="block2-txt-child1 flex-col-l ">
 									<a href="detail?pid=${p.id}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
-										${p.name}
+										${lang == 'en' ? p.nameEn : p.name}
 									</a>
 
 									<span class="stext-105 cl3">
@@ -379,11 +388,11 @@
                             <input type="hidden" name="id" class="modal-id" value="">
                             
                             <div class="flex-w flex-r-m p-b-10">
-                                <div class="size-203 flex-c-m respon6">Size</div>
+                                <div class="size-203 flex-c-m respon6"><fmt:message key="product.size" bundle="${msgs}" /></div>
                                 <div class="size-204 respon6-next">
                                     <div class="rs1-select2 bor8 bg0">
                                         <select class="js-select2" name="size" id="modal-size-select" required>
-                                            <option>Đang tải...</option>
+                                            <option><c:choose><c:when test="${sessionScope.lang == 'en'}">Loading...</c:when><c:otherwise>Đang tải...</c:otherwise></c:choose></option>
                                         </select>
                                         <div class="dropDownSelect2"></div>
                                     </div>
@@ -401,7 +410,7 @@
                                         <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m"><i class="fs-16 zmdi zmdi-plus"></i></div>
                                     </div>
                                     <button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
-                                        Thêm vào giỏ
+                                        <fmt:message key="product.addToCart" bundle="${msgs}" />
                                     </button>
                                 </div>
                             </div>  
@@ -496,16 +505,21 @@
 
 	<%-- SCRIPT XỬ LÝ QUICK VIEW --%>
 	<script>
+	var lang = '${sessionScope.lang}' || 'vi';
+	
     $('.js-show-modal1').on('click', function(e){
         e.preventDefault();
         var id = $(this).data('id');
         var name = $(this).data('name');
+        var nameEn = $(this).data('name-en');
         var price = $(this).data('price');
         var desc = $(this).data('desc');
+        var descEn = $(this).data('desc-en');
         var img = $(this).data('img'); 
         
-        $('.modal-name').text(name);
-        $('.modal-desc').text(desc);
+        // Display localized name and description
+        $('.modal-name').text(lang === 'en' ? nameEn : name);
+        $('.modal-desc').text(lang === 'en' ? descEn : desc);
         $('.modal-id').val(id); 
         
         var formattedPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);

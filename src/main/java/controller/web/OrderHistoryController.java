@@ -7,17 +7,26 @@ import model.User;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
+
+import controller.BaseController;
+
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.ResourceBundle;
 
 @WebServlet(name = "OrderHistoryController", urlPatterns = { "/order-history" })
-public class OrderHistoryController extends HttpServlet {
+public class OrderHistoryController extends BaseController {
 
 	private final OrderDAO orderDAO = new OrderDAO();
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+
+		setMessages(request);
+
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
 

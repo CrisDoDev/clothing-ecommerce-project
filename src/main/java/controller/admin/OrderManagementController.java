@@ -7,15 +7,17 @@ import service.ProductService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import controller.BaseController;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
 @WebServlet(name = "OrderManagementController", urlPatterns = {"/admin/orders"})
-public class OrderManagementController extends HttpServlet {
+public class OrderManagementController extends BaseController {
     
     private final OrderService orderService = new OrderService();
     private final ProductService productService = new ProductService();
@@ -24,6 +26,10 @@ public class OrderManagementController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
+        
+        // Sử dụng phương thức gộp từ BaseController
+        setMessages(request);
+
         String action = request.getParameter("action");
         
         // Xem chi tiết
@@ -83,8 +89,6 @@ public class OrderManagementController extends HttpServlet {
                 Order currentOrder = orderService.getOrderById(orderId);
                 
                 // 2. LOGIC HOÀN KHO:
-                // Nếu trạng thái mới là "Đã hủy" VÀ trạng thái cũ KHÔNG PHẢI "Đã hủy"
-                // (Tránh trường hợp admin bấm hủy 2 lần làm hoàn kho 2 lần)
                 if ("Đã hủy".equals(newStatus) && !"Đã hủy".equals(currentOrder.getStatus())) {
                     productService.restoreStockForOrder(orderId);
                 }

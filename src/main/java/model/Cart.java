@@ -16,7 +16,7 @@ public class Cart {
 
     // Thêm sản phẩm vào giỏ
     public void addItem(CartItem newItem) {
-        // 1. Kiểm tra xem sản phẩm + size này đã có trong giỏ chưa
+        // Kiểm tra xem sản phẩm + size này đã có trong giỏ chưa
         for (CartItem item : items) {
             if (item.getProduct().getId() == newItem.getProduct().getId() 
                 && item.getSize().equals(newItem.getSize())) {
@@ -26,7 +26,7 @@ public class Cart {
                 return;
             }
         }
-        // 2. Nếu chưa có thì thêm mới
+        //  Nếu chưa có thì thêm mới
         items.add(newItem);
     }
 

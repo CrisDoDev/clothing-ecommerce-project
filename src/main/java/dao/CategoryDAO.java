@@ -31,16 +31,18 @@ public class CategoryDAO {
 				ResultSet rs = ps.executeQuery()) {
 
 			while (rs.next()) {
-				// Giả sử constructor của bạn là (id, name)
-				Category c = new Category(rs.getInt("category_id"), rs.getString("category_name"));
-				list.add(c);
-			}
-		} catch (SQLException e) {
-			// Log lỗi 
-			System.err.println("Error at getAllCategories: " + e.getMessage());
-			e.printStackTrace();
-		}
-
-		return list;
-	}
+	            Category c = new Category();
+	            c.setId(rs.getInt("category_id"));
+	            c.setName(rs.getString("category_name"));
+	            
+	            
+	            c.setNameEn(rs.getString("category_name_en")); 
+	            
+	            list.add(c);
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return list;
+}
 }

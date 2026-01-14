@@ -9,19 +9,26 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
+import controller.BaseController;
 import dao.ProductDAO;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.util.Enumeration;
+import java.util.ResourceBundle;
 
 @WebServlet(name = "CartController", urlPatterns = { "/cart" })
-public class CartController extends HttpServlet {
+public class CartController extends BaseController {
 
 	private final ProductService productService = new ProductService();
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+
+		setMessages(request);
+
 		String action = request.getParameter("action");
 
 		// Lấy giỏ hàng từ Session

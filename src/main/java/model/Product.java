@@ -6,7 +6,9 @@ import java.util.List;
 public class Product {
 	private int product_id;
 	private String name;
+	private String nameEn;
 	private String description;
+	private String descriptionEn;
 	private double price;
 	private String imageUrl;
 	private int categoryId;
@@ -41,12 +43,28 @@ public class Product {
 		this.name = name;
 	}
 
+	public String getNameEn() {
+		return nameEn;
+	}
+
+	public void setNameEn(String nameEn) {
+		this.nameEn = nameEn;
+	}
+
 	public String getDescription() {
 		return description;
 	}
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getDescriptionEn() {
+		return descriptionEn;
+	}
+
+	public void setDescriptionEn(String descriptionEn) {
+		this.descriptionEn = descriptionEn;
 	}
 
 	public double getPrice() {
@@ -95,6 +113,15 @@ public class Product {
 
 	public void setListSizes(List<ProductSizes> listSizes) {
 		this.listSizes = listSizes;
+	}
+
+	// Helper methods for localization
+	public String getLocalizedName(String lang) {
+		return "en".equals(lang) ? nameEn : name;
+	}
+
+	public String getLocalizedDescription(String lang) {
+		return "en".equals(lang) ? descriptionEn : description;
 	}
 
 	@Override

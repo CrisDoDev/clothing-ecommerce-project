@@ -4,10 +4,14 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
+<fmt:setLocale value="${sessionScope.locale}" />
+<fmt:setBundle basename="messages" var="msgs" />
+<c:set var="lang" value="${sessionScope.lang != null ? sessionScope.lang : 'vi'}" />
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="${sessionScope.locale.language}">
 <head>
-<title>Giỏ hàng</title>
+<title><fmt:message key="cart.title" bundle="${msgs}" /></title>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -49,9 +53,9 @@
 
 	<div class="container">
 		<div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
-			<a href="home" class="stext-109 cl8 hov-cl1 trans-04"> Trang chủ
+			<a href="home" class="stext-109 cl8 hov-cl1 trans-04"> <fmt:message key="breadcrumb.home" bundle="${msgs}" />
 				<i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
-			</a> <span class="stext-109 cl4">Giỏ hàng</span>
+			</a> <span class="stext-109 cl4"><fmt:message key="breadcrumb.cart" bundle="${msgs}" /></span>
 		</div>
 	</div>
 
@@ -64,18 +68,17 @@
 						<div class="wrap-table-shopping-cart">
 							<table class="table-shopping-cart">
 								<tr class="table_head">
-									<th class="column-1">Sản phẩm</th>
+									<th class="column-1"><fmt:message key="cart.product" bundle="${msgs}" /></th>
 									<th class="column-2"></th>
-									<th class="column-3">Giá</th>
-									<th class="column-4">Số lượng</th>
-									<th class="column-5">Tổng</th>
+									<th class="column-3"><fmt:message key="product.price" bundle="${msgs}" /></th>
+									<th class="column-4"><fmt:message key="product.quantity" bundle="${msgs}" /></th>
+									<th class="column-5"><fmt:message key="cart.total" bundle="${msgs}" /></th>
 								</tr>
 
 								<%-- Kiểm tra giỏ hàng có trống không --%>
 								<c:if test="${empty sessionScope.cart.items}">
 									<tr>
-										<td colspan="5" class="text-center p-t-20 p-b-20">Giỏ
-											hàng đang trống. <a href="product">Mua sắm ngay!</a>
+										<td colspan="5" class="text-center p-t-20 p-b-20"><fmt:message key="cart.emptyMessage" bundle="${msgs}" />
 										</td>
 									</tr>
 								</c:if>
@@ -87,17 +90,22 @@
 											<%-- Nút Xóa (Click vào ảnh hoặc thêm icon X) --%>
 											<div class="how-itemcart1"
 												onclick="window.location='cart?action=remove&id=${item.product.id}&size=${item.size}'"
-												title="Xóa sản phẩm này">
+												title="<fmt:message key='cart.remove' bundle='${msgs}' />">
 												<img src="images/${item.product.imageUrl}" alt="IMG">
 											</div>
 										</td>
-										<td class="column-2">${item.product.name}<br> <span
-											style="font-size: 12px; color: #888;">Size:
+										<td class="column-2">${sessionScope.lang == 'en' ? item.product.nameEn : item.product.name}<br> <span
+											style="font-size: 12px; color: #888;"><fmt:message key="product.size" bundle="${msgs}" />:
 												${item.size}</span>
 										</td>
 										<td class="column-3"><fmt:formatNumber
 												value="${item.product.price}" type="number"
-												maxFractionDigits="0" /> đ</td>
+												maxFractionDigits="0" /> 
+											<c:choose>
+												<c:when test="${sessionScope.locale.language == 'vi'}">₫</c:when>
+												<c:otherwise>$</c:otherwise>
+											</c:choose>
+										</td>
 										<td class="column-4">
 											<div class="wrap-num-product flex-w m-l-auto m-r-0">
 												<div
@@ -118,12 +126,21 @@
 												</div>
 											</div> <%-- Hiển thị tồn kho  --%>
 											<div class="text-center p-t-5"
-												style="font-size: 11px; color: #888;">(Còn:
-												${item.stockQuantity})</div>
+												style="font-size: 11px; color: #888;">
+												<c:choose>
+													<c:when test="${sessionScope.locale.language == 'vi'}">(Còn: ${item.stockQuantity})</c:when>
+													<c:otherwise>(Available: ${item.stockQuantity})</c:otherwise>
+												</c:choose>
+											</div>
 										</td>
 										<td class="column-5"><fmt:formatNumber
 												value="${item.totalPrice}" type="number"
-												maxFractionDigits="0" /> đ</td>
+												maxFractionDigits="0" /> 
+											<c:choose>
+												<c:when test="${sessionScope.locale.language == 'vi'}">₫</c:when>
+												<c:otherwise>$</c:otherwise>
+											</c:choose>
+										</td>
 									</tr>
 								</c:forEach>
 							</table>
@@ -135,7 +152,7 @@
 
 							<button type="submit" name="action" value="update"
 								class="flex-c-m stext-101 cl2 size-119 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-10">
-								Cập nhật giỏ hàng</button>
+								<fmt:message key="cart.update" bundle="${msgs}" /></button>
 						</div>
 					</div>
 				</div>
@@ -143,29 +160,37 @@
 				<div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
 					<div
 						class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
-						<h4 class="mtext-109 cl2 p-b-30">Tổng số tiền</h4>
+						<h4 class="mtext-109 cl2 p-b-30"><fmt:message key="checkout.orderSummary" bundle="${msgs}" /></h4>
 
 						<div class="flex-w flex-t bor12 p-b-13">
 							<div class="size-208">
-								<span class="stext-110 cl2"> Tạm tính: </span>
+								<span class="stext-110 cl2"> <fmt:message key="cart.subtotal" bundle="${msgs}" />: </span>
 							</div>
 
 							<div class="size-209">
 								<span class="mtext-110 cl2"> <c:set var="total"
 										value="${sessionScope.cart.totalMoney}" /> <fmt:formatNumber
-										value="${total}" type="number" maxFractionDigits="0" /> đ
+										value="${total}" type="number" maxFractionDigits="0" /> 
+									<c:choose>
+										<c:when test="${sessionScope.locale.language == 'vi'}">₫</c:when>
+										<c:otherwise>$</c:otherwise>
+									</c:choose>
 								</span>
 							</div>
 						</div>
 
 						<div class="flex-w flex-t p-t-27 p-b-33">
 							<div class="size-208">
-								<span class="mtext-101 cl2"> Tổng cộng: </span>
+								<span class="mtext-101 cl2"> <fmt:message key="cart.total" bundle="${msgs}" />: </span>
 							</div>
 
 							<div class="size-209 p-t-1">
 								<span class="mtext-110 cl2"> <fmt:formatNumber
-										value="${total}" type="number" maxFractionDigits="0" /> đ
+										value="${total}" type="number" maxFractionDigits="0" /> 
+									<c:choose>
+										<c:when test="${sessionScope.locale.language == 'vi'}">₫</c:when>
+										<c:otherwise>$</c:otherwise>
+									</c:choose>
 								</span>
 							</div>
 						</div>
@@ -174,12 +199,12 @@
 							<c:when test="${not empty sessionScope.cart.items}">
 								<button type="submit" name="action" value="checkout"
 									class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
-									Tiến hành thanh toán</button>
+									<fmt:message key="cart.checkout" bundle="${msgs}" /></button>
 							</c:when>
 							<c:otherwise>
 								<button type="button"
 									class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer"
-									disabled style="opacity: 0.5;">Giỏ hàng trống</button>
+									disabled style="opacity: 0.5;"><fmt:message key="cart.empty" bundle="${msgs}" /></button>
 							</c:otherwise>
 						</c:choose>
 
