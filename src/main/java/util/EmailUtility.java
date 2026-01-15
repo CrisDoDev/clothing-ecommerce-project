@@ -16,7 +16,7 @@ public class EmailUtility {
     private static final String HOST = "smtp.gmail.com";
     private static final String PORT = "587";
     private static final String SENDER_EMAIL = "dominhphuoc68@gmail.com"; // Email 
-    private static final String SENDER_PASS = "tsxp gduf cojs njdh";     // Mật khẩu ứng dụng Gmail
+    private static final String SENDER_PASS = "xafo zqvt buqx losr";     // Mật khẩu ứng dụng Gmail
 
     public static void sendOrderConfirmation(User recipient, Order order, List<OrderDetailInfo> details) {
         // Cấu hình Properties cho Session
