@@ -3,6 +3,7 @@ package dao;
 import model.Cart;
 import model.CartItem;
 import model.Order;
+import model.OrderDetail;
 import model.OrderDetailInfo;
 import model.User;
 import util.DBContext;
@@ -155,33 +156,69 @@ public class OrderDAO {
 			e.printStackTrace();
 		}
 	}
-	
+
 	// Lấy thông tin 1 đơn hàng theo ID
-		public Order getOrderById(int orderId) {
-			String query = "SELECT * FROM Orders WHERE order_id = ?";
-			try (Connection conn = DBContext.getDataSource().getConnection();
-				 PreparedStatement ps = conn.prepareStatement(query)) {
-				
-				ps.setInt(1, orderId);
-				
-				try (ResultSet rs = ps.executeQuery()) {
-					if (rs.next()) {
-						Order o = new Order();
-						o.setId(rs.getInt("order_id"));
-						o.setUserId(rs.getInt("user_id"));
-						o.setTotalMoney(rs.getDouble("total_money"));
-						o.setStatus(rs.getString("status"));
-						o.setShippingAddress(rs.getString("shipping_address"));
-						o.setOrderDate(rs.getTimestamp("order_date"));
-						return o;
-					}
+	public Order getOrderById(int orderId) {
+		String query = "SELECT * FROM Orders WHERE order_id = ?";
+		try (Connection conn = DBContext.getDataSource().getConnection();
+				PreparedStatement ps = conn.prepareStatement(query)) {
+
+			ps.setInt(1, orderId);
+
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					Order o = new Order();
+					o.setId(rs.getInt("order_id"));
+					o.setUserId(rs.getInt("user_id"));
+					o.setTotalMoney(rs.getDouble("total_money"));
+					o.setStatus(rs.getString("status"));
+					o.setShippingAddress(rs.getString("shipping_address"));
+					o.setOrderDate(rs.getTimestamp("order_date"));
+					return o;
 				}
-			} catch (SQLException e) {
-				e.printStackTrace();
 			}
-			return null;
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-	
-	
+		return null;
+	}
+
+	// Lấy chi tiết đơn hàng để tính hash
+	public List<OrderDetail> getRawDetailsForHash(int orderId) {
+		List<OrderDetail> list = new ArrayList<>();
+		String query = "SELECT product_id, quantity, price FROM OrderDetails WHERE order_id = ? ORDER BY product_id ASC";
+
+		try (Connection conn = DBContext.getDataSource().getConnection();
+				PreparedStatement ps = conn.prepareStatement(query)) {
+
+			ps.setInt(1, orderId);
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					OrderDetail d = new OrderDetail();
+					d.setProductId(rs.getInt("product_id"));
+					d.setQuantity(rs.getInt("quantity"));
+					d.setPrice(rs.getDouble("price"));
+					list.add(d);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	// Cập nhật mã băm và trạng thái đơn hàng
+	public void updateOrderHashAndStatus(int orderId, String hash, String status) {
+		String query = "UPDATE Orders SET order_hash = ?, status = ? WHERE order_id = ?";
+		try (Connection conn = DBContext.getDataSource().getConnection();
+				PreparedStatement ps = conn.prepareStatement(query)) {
+			ps.setString(1, hash);
+			ps.setString(2, status);
+			ps.setInt(3, orderId);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 }
