@@ -75,6 +75,10 @@ public class OrderDAO {
 					o.setStatus(rs.getString("status"));
 					o.setShippingAddress(rs.getString("shipping_address"));
 					o.setOrderDate(rs.getTimestamp("order_date"));
+					o.setKeyId((Integer) rs.getObject("key_id"));
+					o.setDigitalSignature(rs.getString("digital_signature"));
+					o.setOrderHash(rs.getString("order_hash"));
+					o.setSignedAt(rs.getTimestamp("signed_at"));
 
 					list.add(o);
 				}
@@ -135,6 +139,12 @@ public class OrderDAO {
 					o.setStatus(rs.getString("status"));
 					o.setShippingAddress(rs.getString("shipping_address"));
 					o.setOrderDate(rs.getTimestamp("order_date"));
+					o.setKeyId((Integer) rs.getObject("key_id"));
+					o.setDigitalSignature(rs.getString("digital_signature"));
+					o.setOrderHash(rs.getString("order_hash"));
+					o.setSignedAt(rs.getTimestamp("signed_at"));
+					o.setPublicKeyText(rs.getString("public_key_text"));
+
 					list.add(o);
 				}
 			}
@@ -174,6 +184,10 @@ public class OrderDAO {
 					o.setStatus(rs.getString("status"));
 					o.setShippingAddress(rs.getString("shipping_address"));
 					o.setOrderDate(rs.getTimestamp("order_date"));
+					o.setKeyId((Integer) rs.getObject("key_id"));
+					o.setDigitalSignature(rs.getString("digital_signature"));
+					o.setOrderHash(rs.getString("order_hash"));
+					o.setSignedAt(rs.getTimestamp("signed_at"));
 					return o;
 				}
 			}
