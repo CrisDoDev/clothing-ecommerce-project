@@ -30,4 +30,24 @@ public class SignatureUtil {
 			return false;
 		}
 	}
+
+	public static String buildOrderHash(int orderId, int userId, double totalMoney, String rawDetailsStr) {
+		try {
+			// Nối dữ liệu để tạo chuỗi băm
+			String rawData = "orderId=" + orderId + "&userId=" + userId + "&total=" + totalMoney + "&items="
+					+ rawDetailsStr;
+
+			MessageDigest digest = MessageDigest.getInstance("SHA-256");
+			byte[] hashBytes = digest.digest(rawData.getBytes(StandardCharsets.UTF_8));
+
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < hashBytes.length; i++) {
+				sb.append(String.format("%02x", hashBytes[i]));
+			}
+			return sb.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 }
