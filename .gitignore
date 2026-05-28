@@ -1,15 +1,11 @@
-# Cần loại trừ: Cài đặt cá nhân và build của Eclipse
-.settings/
-
-# Thư mục build và các file đã biên dịch
-build/
-target/
+# Compiled output
+bin/
 *.class
 
-# Các file tạm của server (nếu Eclipse tự sinh ra)
-.tomcat/
-*.tmp
+# IDE
+.settings/
+.idea/
 
-# Các file hệ điều hành
+# OS
 .DS_Store
 Thumbs.db
