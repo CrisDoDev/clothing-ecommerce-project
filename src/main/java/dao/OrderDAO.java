@@ -234,5 +234,19 @@ public class OrderDAO {
 			e.printStackTrace();
 		}
 	}
+	// Lưu chữ ký số và các thông tin liên quan khi xác thực thành công
+	public void updateOrderSignature(int orderId, int keyId, String signature, String status) {
+	    String query = "UPDATE Orders SET key_id = ?, digital_signature = ?, signed_at = GETDATE(), status = ? WHERE order_id = ?";
+	    try (Connection conn = DBContext.getDataSource().getConnection();
+	         PreparedStatement ps = conn.prepareStatement(query)) {
+	        ps.setInt(1, keyId);
+	        ps.setString(2, signature);
+	        ps.setString(3, status);
+	        ps.setInt(4, orderId);
+	        ps.executeUpdate();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
 
 }
