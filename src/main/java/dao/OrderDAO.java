@@ -116,12 +116,12 @@ public class OrderDAO {
 	// [ADMIN] Lấy tất cả đơn hàng
 	public List<Order> getAllOrders(String status) {
 		List<Order> list = new ArrayList<>();
-		String query = "SELECT * FROM Orders";
+		String query = "SELECT o.*, k.public_key_text FROM Orders o LEFT JOIN UserKeys k ON o.key_id = k.key_id";
 
 		if (status != null && !status.equals("all")) {
-			query += " WHERE status = ?";
+			query += " WHERE o.status = ?";
 		}
-		query += " ORDER BY order_date DESC";
+		query += " ORDER BY o.order_date DESC";
 
 		try (Connection conn = DBContext.getDataSource().getConnection();
 				PreparedStatement ps = conn.prepareStatement(query)) {
