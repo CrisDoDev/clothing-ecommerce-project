@@ -3,7 +3,6 @@ package controller.web;
 import dao.OrderDAO;
 import dao.UserKeyDAO;
 import model.User;
-import model.User;
 import model.UserKey;
 import util.SignatureUtil;
 
@@ -38,17 +37,25 @@ public class SubmitSignatureController extends HttpServlet {
 			String signature = request.getParameter("signature");
 			UserKey activeKey = keyDAO.getLatestActiveKey(user.getId());
 
-			if (activeKey != null) {
-				boolean isIntact = SignatureUtil.verifySignature(orderHash, signature, activeKey.getPublicKeyText());
+			if (activeKey == null) {
+				request.setAttribute("errorMessage",
+						"Bạn chưa thiết lập Public Key. Vui lòng vào Cài đặt tài khoản để cập nhật!");
+				request.setAttribute("orderId", orderId);
+				request.setAttribute("orderHash", orderHash);
+				request.getRequestDispatcher("/views/checkout-signature.jsp").forward(request, response);
+				return;
+			}
+			boolean isIntact = SignatureUtil.verifySignature(orderHash, signature, activeKey.getPublicKeyText());
 
-				if (isIntact) {
-					orderDAO.updateOrderSignature(orderId, activeKey.getKeyId(), signature, "Đã xác thực");
-					response.sendRedirect("home?status=order_success");
-				} else {
-					response.sendRedirect("home?status=order_error");
-				}
+			if (isIntact) {
+				orderDAO.updateOrderSignature(orderId, activeKey.getKeyId(), signature, "Đã xác thực");
+				response.sendRedirect("home?status=order_success");
 			} else {
-				response.sendRedirect("home?status=no_key");
+				request.setAttribute("errorMessage",
+						"Chữ ký số sai lệch hoặc không trùng khớp với tài khoản, vui lòng thử lại!");
+				request.setAttribute("orderId", orderId);
+				request.setAttribute("orderHash", orderHash);
+				request.getRequestDispatcher("/views/checkout-signature.jsp").forward(request, response);
 			}
 
 		} catch (Exception e) {
