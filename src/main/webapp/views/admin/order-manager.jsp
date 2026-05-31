@@ -15,9 +15,17 @@
 				<div class="col-auto">
 					<select name="status" class="form-select">
 						<option value="all">Tất cả</option>
-						<option value="Đã xác nhận"
-							${param.status == 'Đã xác nhận' ? 'selected' : ''}>Đã
-							xác nhận</option>
+						<option value="Chờ ký số"
+							${param.status == 'Chờ ký số' ? 'selected' : ''}>Chờ ký
+							số</option>
+						<option value="Đã xác thực"
+							${param.status == 'Đã xác thực' ? 'selected' : ''}>Đã
+							xác thực</option>
+						<option value="Đang giao"
+							${param.status == 'Đang giao' ? 'selected' : ''}>Đang
+							giao</option>
+						<option value="Đã giao"
+							${param.status == 'Đã giao' ? 'selected' : ''}>Đã giao</option>
 						<option value="Đã hủy"
 							${param.status == 'Đã hủy' ? 'selected' : ''}>Đã hủy</option>
 					</select>
@@ -52,9 +60,7 @@
 						</td>
 						<td class="text-danger fw-bold"><fmt:formatNumber
 								value="${o.totalMoney}" type="currency" currencySymbol="₫" /></td>
-						<td><span
-							class="badge ${o.status == 'Đã hủy' ? 'bg-danger' : 'bg-success'}">
-								${o.status} </span></td>
+						<td><span class="badge bg-primary"> ${o.status} </span></td>
 						<td>
 							<button class="btn btn-info btn-sm text-white"
 								onclick="viewOrderDetails('${o.id}')" title="Xem chi tiết">
@@ -99,7 +105,10 @@
 					<div class="mb-3">
 						<label class="form-label">Trạng thái mới</label> <select
 							name="status" id="update_status" class="form-select">
-							<option value="Đã xác nhận">Đã xác nhận</option>
+							<option value="Chờ ký số">Chờ ký số</option>
+							<option value="Đã xác thực">Đã xác thực</option>
+							<option value="Đang giao">Đang giao</option>
+							<option value="Đã giao">Đã giao</option>
 							<option value="Đã hủy">Đã hủy</option>
 						</select>
 					</div>
