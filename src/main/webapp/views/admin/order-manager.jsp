@@ -60,7 +60,25 @@
 						</td>
 						<td class="text-danger fw-bold"><fmt:formatNumber
 								value="${o.totalMoney}" type="currency" currencySymbol="₫" /></td>
-						<td><span class="badge bg-primary"> ${o.status} </span></td>
+						<td><c:choose>
+								<c:when test="${o.status == 'Đã xác thực'}">
+									<span class="badge bg-success">Đã xác thực</span>
+								</c:when>
+								<c:when test="${o.status == 'Lỗi: Dữ liệu bất thường'}">
+									<span class="badge bg-danger shadow cursor-pointer"
+										title="CẢNH BÁO: Dữ liệu đơn hàng hoặc giá trị thanh toán đã bị sửa đổi trái phép!">LỖI:
+										DỮ LIỆU BẤT THƯỜNG</span>
+								</c:when>
+								<c:when test="${o.status == 'Chờ ký số'}">
+									<span class="badge bg-warning text-dark">Chờ ký số</span>
+								</c:when>
+								<c:when test="${o.status == 'Đã hủy'}">
+									<span class="badge bg-secondary">Đã hủy</span>
+								</c:when>
+								<c:otherwise>
+									<span class="badge bg-primary">${o.status}</span>
+								</c:otherwise>
+							</c:choose></td>
 						<td>
 							<button class="btn btn-info btn-sm text-white"
 								onclick="viewOrderDetails('${o.id}')" title="Xem chi tiết">
