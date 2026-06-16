@@ -55,10 +55,10 @@ public class UserKeyController extends HttpServlet {
         if ("upload".equals(action)) {
             String publicKeyText = request.getParameter("publicKey");
             if (publicKeyText != null && !publicKeyText.trim().isEmpty()) {
-                // Hủy khóa cũ (nếu có muốn chỉ giữ 1 khóa 1 lúc)
+        if (keyDAO.checkKeyRevoked(publicKeyText.trim())) {
+            request.setAttribute("errorMessage", "PUBLIC KEY này đã bị hủy trước đó và không thể tái sử dụng!");
+        } else {
                 keyDAO.revokeKey(user.getId());
-                
-                // Lưu khóa mới
                 UserKey newKey = new UserKey();
                 newKey.setUserId(user.getId());
                 newKey.setPublicKeyText(publicKeyText.trim());
@@ -66,6 +66,8 @@ public class UserKeyController extends HttpServlet {
                 
                 request.setAttribute("successMessage", "Cập nhật Public Key mới thành công!");
             }
+        }
+    
         } else if ("revoke".equals(action)) {
             keyDAO.revokeKey(user.getId());
             request.setAttribute("successMessage", "Đã báo mất và vô hiệu hóa khóa thành công!");

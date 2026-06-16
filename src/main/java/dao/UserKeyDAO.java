@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-
 import model.UserKey;
 import util.DBContext;
 
@@ -80,4 +79,22 @@ public class UserKeyDAO {
         }
         return list;
     }
+    // Kiểm tra xem khóa có từng bị hủy (để tránh tái sử dụng khóa cũ đã bị hủy)
+public boolean checkKeyRevoked(String publicKeyText) {
+    String sql = "SELECT COUNT(*) FROM UserKeys WHERE public_key_text = ? AND status = 'REVOKED'";
+    try (Connection conn = DBContext.getDataSource().getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setString(1, publicKeyText);
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                if (rs.getInt(1) > 0) {
+                    return true;
+                }
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return false;
+}
 }
