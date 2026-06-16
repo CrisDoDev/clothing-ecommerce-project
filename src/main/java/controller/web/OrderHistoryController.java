@@ -2,7 +2,9 @@ package controller.web;
 
 import dao.OrderDAO;
 import model.Order;
+import model.OrderDetail;
 import model.User;
+import util.SignatureUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -38,6 +40,32 @@ public class OrderHistoryController extends BaseController {
 
 		// Lấy danh sách đơn hàng của user này
 		List<Order> listOrders = orderDAO.getOrdersByUserId(user.getId());
+		//Vòng lặp chạy ngầm quét kiểm tra toàn vẹn đơn hàng cho khách hàng
+		for (Order order : listOrders) {
+			if ("Đã xác thực".equals(order.getStatus()) && order.getDigitalSignature() != null) {
+
+				List<OrderDetail> rawDetails = orderDAO.getRawDetailsForHash(order.getId());
+				StringBuilder detailStrBuilder = new StringBuilder();
+				for (int i = 0; i < rawDetails.size(); i++) {
+					OrderDetail d = rawDetails.get(i);
+					detailStrBuilder.append("pid").append(d.getProductId()).append("_q").append(d.getQuantity())
+							.append("_p").append((long) d.getPrice());
+					if (i < rawDetails.size() - 1)
+						detailStrBuilder.append("|");
+				}
+				
+				String currentHash = SignatureUtil.buildOrderHash(order.getId(), order.getUserId(),
+						order.getTotalMoney(), order.getShippingAddress(), detailStrBuilder.toString());
+						
+				// Xác thực chữ ký số 
+				boolean isIntact = SignatureUtil.verifySignature(currentHash, order.getDigitalSignature(),
+						order.getPublicKeyText());
+
+				if (!isIntact) {
+					order.setStatus("Lỗi: Dữ liệu bất thường");
+				}
+			}
+		}
 
 		// Gửi sang JSP hiển thị
 		request.setAttribute("listOrders", listOrders);
