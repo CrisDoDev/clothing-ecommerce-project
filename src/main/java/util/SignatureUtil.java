@@ -31,11 +31,12 @@ public class SignatureUtil {
 		}
 	}
 
-	public static String buildOrderHash(int orderId, int userId, double totalMoney, String rawDetailsStr) {
+	public static String buildOrderHash(int orderId, int userId, double totalMoney, String shippingAddress,
+			String rawDetailsStr) {
 		try {
 			// Nối dữ liệu để tạo chuỗi băm
-			String rawData = "orderId=" + orderId + "&userId=" + userId + "&total=" + totalMoney + "&items="
-					+ rawDetailsStr;
+			String rawData = "orderId=" + orderId + "&userId=" + userId + "&total=" + totalMoney + "&address="
+					+ shippingAddress + "&items=" + rawDetailsStr;
 
 			MessageDigest digest = MessageDigest.getInstance("SHA-256");
 			byte[] hashBytes = digest.digest(rawData.getBytes(StandardCharsets.UTF_8));

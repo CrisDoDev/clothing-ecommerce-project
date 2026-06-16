@@ -89,7 +89,7 @@ public class OrderManagementController extends BaseController {
 					}
 
 					String currentHash = SignatureUtil.buildOrderHash(order.getId(), order.getUserId(),
-							order.getTotalMoney(), detailStrBuilder.toString());
+							order.getTotalMoney(), order.getShippingAddress(), detailStrBuilder.toString());
 					boolean isIntact = SignatureUtil.verifySignature(currentHash, order.getDigitalSignature(),
 							order.getPublicKeyText());
 

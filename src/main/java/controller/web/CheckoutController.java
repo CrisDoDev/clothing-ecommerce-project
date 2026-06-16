@@ -84,7 +84,7 @@ public class CheckoutController extends BaseController {
 						detailStrBuilder.append("|");
 				}
 
-				String orderHash = SignatureUtil.buildOrderHash(orderId, user.getId(), newOrder.getTotalMoney(),
+				String orderHash = SignatureUtil.buildOrderHash(orderId, user.getId(), newOrder.getTotalMoney(), fullShippingInfo,
 						detailStrBuilder.toString());
 
 				orderDAO.updateOrderHashAndStatus(orderId, orderHash, "Chờ ký số");
