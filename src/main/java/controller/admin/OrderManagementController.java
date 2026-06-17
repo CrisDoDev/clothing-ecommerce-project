@@ -76,7 +76,8 @@ public class OrderManagementController extends BaseController {
 			OrderDAO orderDAO = new OrderDAO();
 			for (Order order : listOrder) {
 
-				if ("Đã xác thực".equals(order.getStatus()) && order.getDigitalSignature() != null) {
+				if (("Đã xác thực".equals(order.getStatus()) || "Lỗi: Dữ liệu bất thường".equals(order.getStatus())
+						|| "Lỗi: Khóa hết hiệu lực".equals(order.getStatus())) && order.getDigitalSignature() != null) {
 
 					List<OrderDetail> rawDetails = orderDAO.getRawDetailsForHash(order.getId());
 					StringBuilder detailStrBuilder = new StringBuilder();
@@ -95,6 +96,28 @@ public class OrderManagementController extends BaseController {
 
 					if (!isIntact) {
 						order.setStatus("Lỗi: Dữ liệu bất thường");
+						orderDAO.updateOrderHashAndStatus(order.getId(), order.getOrderHash(),
+								"Lỗi: Dữ liệu bất thường");
+					}
+					// Dữ liệu nguyên vẹn nhưng khóa bị hết hiệu lực
+					else if ("REVOKED".equals(order.getKeyStatus()) && order.getKeyRevokedAt() != null
+							&& order.getSignedAt() != null && !order.getSignedAt().before(order.getKeyRevokedAt())) {
+
+						order.setStatus("Lỗi: Khóa hết hiệu lực");
+						orderDAO.updateOrderHashAndStatus(order.getId(), order.getOrderHash(),
+								"Lỗi: Khóa hết hiệu lực");
+					}
+					// Mọi thứ đều hợp lệ
+					else {
+
+						if ("Lỗi: Dữ liệu bất thường".equals(order.getStatus())
+								|| "Lỗi: Khóa hết hiệu lực".equals(order.getStatus())) {
+
+							order.setStatus("Đã xác thực");
+
+							orderDAO.updateOrderHashAndStatus(order.getId(), order.getOrderHash(), "Đã xác thực");
+
+						}
 					}
 				}
 			}

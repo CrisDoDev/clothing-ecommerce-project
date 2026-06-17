@@ -59,7 +59,7 @@ public class OrderDAO {
 	// lấy danh sách đơn hàng của 1 user
 	public List<Order> getOrdersByUserId(int userId) {
 		List<Order> list = new ArrayList<>();
-		String query = "SELECT o.*, k.public_key_text FROM Orders o LEFT JOIN UserKeys k ON o.key_id = k.key_id WHERE o.user_id = ? ORDER BY o.order_date DESC"; // Mới nhất lên đầu
+		String query = "SELECT o.*, k.public_key_text, k.status AS key_status, k.revoked_at AS key_revoked_at FROM Orders o LEFT JOIN UserKeys k ON o.key_id = k.key_id WHERE o.user_id = ? ORDER BY o.order_date DESC"; // Mới nhất lên đầu
 
 		try (Connection conn = DBContext.getDataSource().getConnection();
 				PreparedStatement ps = conn.prepareStatement(query)) {
@@ -80,6 +80,8 @@ public class OrderDAO {
 					o.setOrderHash(rs.getString("order_hash"));
 					o.setSignedAt(rs.getTimestamp("signed_at"));
 					o.setPublicKeyText(rs.getString("public_key_text"));
+					o.setKeyStatus(rs.getString("key_status"));
+		            o.setKeyRevokedAt(rs.getTimestamp("key_revoked_at"));
 
 					list.add(o);
 				}
@@ -117,7 +119,7 @@ public class OrderDAO {
 	// [ADMIN] Lấy tất cả đơn hàng
 	public List<Order> getAllOrders(String status) {
 		List<Order> list = new ArrayList<>();
-		String query = "SELECT o.*, k.public_key_text FROM Orders o LEFT JOIN UserKeys k ON o.key_id = k.key_id";
+		String query = "SELECT o.*, k.public_key_text, k.status AS key_status, k.revoked_at AS key_revoked_at FROM Orders o LEFT JOIN UserKeys k ON o.key_id = k.key_id";
 
 		if (status != null && !status.equals("all")) {
 			query += " WHERE o.status = ?";
@@ -145,6 +147,8 @@ public class OrderDAO {
 					o.setOrderHash(rs.getString("order_hash"));
 					o.setSignedAt(rs.getTimestamp("signed_at"));
 					o.setPublicKeyText(rs.getString("public_key_text"));
+					o.setKeyStatus(rs.getString("key_status"));
+	                o.setKeyRevokedAt(rs.getTimestamp("key_revoked_at"));
 
 					list.add(o);
 				}
@@ -170,7 +174,7 @@ public class OrderDAO {
 
 	// Lấy thông tin 1 đơn hàng theo ID
 	public Order getOrderById(int orderId) {
-		String query = "SELECT * FROM Orders WHERE order_id = ?";
+		String query = "SELECT o.*, k.public_key_text, k.status AS key_status, k.revoked_at AS key_revoked_at FROM Orders o LEFT JOIN UserKeys k ON o.key_id = k.key_id WHERE o.order_id = ?";
 		try (Connection conn = DBContext.getDataSource().getConnection();
 				PreparedStatement ps = conn.prepareStatement(query)) {
 
@@ -189,6 +193,9 @@ public class OrderDAO {
 					o.setDigitalSignature(rs.getString("digital_signature"));
 					o.setOrderHash(rs.getString("order_hash"));
 					o.setSignedAt(rs.getTimestamp("signed_at"));
+					o.setPublicKeyText(rs.getString("public_key_text"));
+                    o.setKeyStatus(rs.getString("key_status"));
+                    o.setKeyRevokedAt(rs.getTimestamp("key_revoked_at"));
 					return o;
 				}
 			}

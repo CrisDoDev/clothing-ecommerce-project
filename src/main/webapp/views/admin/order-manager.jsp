@@ -1,4 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ include file="layout-admin.jsp"%>
@@ -68,6 +69,11 @@
 									<span class="badge bg-danger shadow cursor-pointer"
 										title="CẢNH BÁO: Dữ liệu đơn hàng hoặc giá trị thanh toán đã bị sửa đổi trái phép!">LỖI:
 										DỮ LIỆU BẤT THƯỜNG</span>
+								</c:when>
+								<c:when test="${o.status == 'Lỗi: Khóa hết hiệu lực'}">
+									<span class="badge bg-warning text-dark shadow cursor-pointer"
+										title="Đơn hàng được ký bằng khóa đã bị thu hồi trước thời điểm ký.">Lỗi:
+										Khóa hết hiệu lực</span>
 								</c:when>
 								<c:when test="${o.status == 'Chờ ký số'}">
 									<span class="badge bg-warning text-dark">Chờ ký số</span>
