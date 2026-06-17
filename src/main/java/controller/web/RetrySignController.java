@@ -12,36 +12,42 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebServlet(name = "RetrySignController", urlPatterns = {"/retry-sign"})
+@WebServlet(name = "RetrySignController", urlPatterns = { "/retry-sign" })
 public class RetrySignController extends HttpServlet {
 
-    private final OrderDAO orderDAO = new OrderDAO();
+	private final OrderDAO orderDAO = new OrderDAO();
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("user");
+		if (user == null) {
+			response.sendRedirect("login.jsp?message=login_required");
+			return;
+		}
+		try {
+			int orderId = Integer.parseInt(request.getParameter("orderId"));
+			Order order = orderDAO.getOrderById(orderId);
+			if (order != null && order.getUserId() == user.getId()) {
+				boolean isKeyExpired = false;
+				if ("REVOKED".equals(order.getKeyStatus()) && order.getKeyRevokedAt() != null) {
+					if (order.getSignedAt() != null && !order.getSignedAt().before(order.getKeyRevokedAt())) {
+						isKeyExpired = true;
+					}
+				}
+				if ("Chờ ký số".equals(order.getStatus()) || isKeyExpired) {
+					request.setAttribute("orderId", order.getId());
+					request.setAttribute("orderHash", order.getOrderHash());
+					request.setAttribute("totalMoney", order.getTotalMoney());
+					request.getRequestDispatcher("/views/checkout-signature.jsp").forward(request, response);
+					return;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-        if (user == null) {
-            response.sendRedirect("login.jsp?message=login_required");
-            return;
-        }
-
-        try {
-            int orderId = Integer.parseInt(request.getParameter("orderId"));
-            Order order = orderDAO.getOrderById(orderId);
-
-            if (order != null && "Chờ ký số".equals(order.getStatus()) && order.getUserId() == user.getId()) {
-                request.setAttribute("orderId", order.getId());
-                request.setAttribute("orderHash", order.getOrderHash());
-                request.setAttribute("totalMoney", order.getTotalMoney());
-                request.getRequestDispatcher("/views/checkout-signature.jsp").forward(request, response);
-                return;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        
-        response.sendRedirect("order-history");
-    }
+		response.sendRedirect("order-history");
+	}
 }
