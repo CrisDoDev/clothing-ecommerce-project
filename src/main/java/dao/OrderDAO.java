@@ -3,6 +3,7 @@ package dao;
 import model.Cart;
 import model.CartItem;
 import model.Order;
+import model.OrderDetail;
 import model.OrderDetailInfo;
 import model.User;
 import util.DBContext;
@@ -58,7 +59,7 @@ public class OrderDAO {
 	// lấy danh sách đơn hàng của 1 user
 	public List<Order> getOrdersByUserId(int userId) {
 		List<Order> list = new ArrayList<>();
-		String query = "SELECT * FROM Orders WHERE user_id = ? ORDER BY order_date DESC"; // Mới nhất lên đầu
+		String query = "SELECT o.*, k.public_key_text, k.status AS key_status, k.revoked_at AS key_revoked_at FROM Orders o LEFT JOIN UserKeys k ON o.key_id = k.key_id WHERE o.user_id = ? ORDER BY o.order_date DESC"; // Mới nhất lên đầu
 
 		try (Connection conn = DBContext.getDataSource().getConnection();
 				PreparedStatement ps = conn.prepareStatement(query)) {
@@ -74,6 +75,13 @@ public class OrderDAO {
 					o.setStatus(rs.getString("status"));
 					o.setShippingAddress(rs.getString("shipping_address"));
 					o.setOrderDate(rs.getTimestamp("order_date"));
+					o.setKeyId((Integer) rs.getObject("key_id"));
+					o.setDigitalSignature(rs.getString("digital_signature"));
+					o.setOrderHash(rs.getString("order_hash"));
+					o.setSignedAt(rs.getTimestamp("signed_at"));
+					o.setPublicKeyText(rs.getString("public_key_text"));
+					o.setKeyStatus(rs.getString("key_status"));
+		            o.setKeyRevokedAt(rs.getTimestamp("key_revoked_at"));
 
 					list.add(o);
 				}
@@ -111,12 +119,12 @@ public class OrderDAO {
 	// [ADMIN] Lấy tất cả đơn hàng
 	public List<Order> getAllOrders(String status) {
 		List<Order> list = new ArrayList<>();
-		String query = "SELECT * FROM Orders";
+		String query = "SELECT o.*, k.public_key_text, k.status AS key_status, k.revoked_at AS key_revoked_at FROM Orders o LEFT JOIN UserKeys k ON o.key_id = k.key_id";
 
 		if (status != null && !status.equals("all")) {
-			query += " WHERE status = ?";
+			query += " WHERE o.status = ?";
 		}
-		query += " ORDER BY order_date DESC";
+		query += " ORDER BY o.order_date DESC";
 
 		try (Connection conn = DBContext.getDataSource().getConnection();
 				PreparedStatement ps = conn.prepareStatement(query)) {
@@ -134,6 +142,14 @@ public class OrderDAO {
 					o.setStatus(rs.getString("status"));
 					o.setShippingAddress(rs.getString("shipping_address"));
 					o.setOrderDate(rs.getTimestamp("order_date"));
+					o.setKeyId((Integer) rs.getObject("key_id"));
+					o.setDigitalSignature(rs.getString("digital_signature"));
+					o.setOrderHash(rs.getString("order_hash"));
+					o.setSignedAt(rs.getTimestamp("signed_at"));
+					o.setPublicKeyText(rs.getString("public_key_text"));
+					o.setKeyStatus(rs.getString("key_status"));
+	                o.setKeyRevokedAt(rs.getTimestamp("key_revoked_at"));
+
 					list.add(o);
 				}
 			}
@@ -155,33 +171,90 @@ public class OrderDAO {
 			e.printStackTrace();
 		}
 	}
-	
+
 	// Lấy thông tin 1 đơn hàng theo ID
-		public Order getOrderById(int orderId) {
-			String query = "SELECT * FROM Orders WHERE order_id = ?";
-			try (Connection conn = DBContext.getDataSource().getConnection();
-				 PreparedStatement ps = conn.prepareStatement(query)) {
-				
-				ps.setInt(1, orderId);
-				
-				try (ResultSet rs = ps.executeQuery()) {
-					if (rs.next()) {
-						Order o = new Order();
-						o.setId(rs.getInt("order_id"));
-						o.setUserId(rs.getInt("user_id"));
-						o.setTotalMoney(rs.getDouble("total_money"));
-						o.setStatus(rs.getString("status"));
-						o.setShippingAddress(rs.getString("shipping_address"));
-						o.setOrderDate(rs.getTimestamp("order_date"));
-						return o;
-					}
+	public Order getOrderById(int orderId) {
+		String query = "SELECT o.*, k.public_key_text, k.status AS key_status, k.revoked_at AS key_revoked_at FROM Orders o LEFT JOIN UserKeys k ON o.key_id = k.key_id WHERE o.order_id = ?";
+		try (Connection conn = DBContext.getDataSource().getConnection();
+				PreparedStatement ps = conn.prepareStatement(query)) {
+
+			ps.setInt(1, orderId);
+
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					Order o = new Order();
+					o.setId(rs.getInt("order_id"));
+					o.setUserId(rs.getInt("user_id"));
+					o.setTotalMoney(rs.getDouble("total_money"));
+					o.setStatus(rs.getString("status"));
+					o.setShippingAddress(rs.getString("shipping_address"));
+					o.setOrderDate(rs.getTimestamp("order_date"));
+					o.setKeyId((Integer) rs.getObject("key_id"));
+					o.setDigitalSignature(rs.getString("digital_signature"));
+					o.setOrderHash(rs.getString("order_hash"));
+					o.setSignedAt(rs.getTimestamp("signed_at"));
+					o.setPublicKeyText(rs.getString("public_key_text"));
+                    o.setKeyStatus(rs.getString("key_status"));
+                    o.setKeyRevokedAt(rs.getTimestamp("key_revoked_at"));
+					return o;
 				}
-			} catch (SQLException e) {
-				e.printStackTrace();
 			}
-			return null;
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-	
-	
+		return null;
+	}
+
+	// Lấy chi tiết đơn hàng để tính hash
+	public List<OrderDetail> getRawDetailsForHash(int orderId) {
+		List<OrderDetail> list = new ArrayList<>();
+		String query = "SELECT product_id, quantity, price FROM OrderDetails WHERE order_id = ? ORDER BY product_id ASC";
+
+		try (Connection conn = DBContext.getDataSource().getConnection();
+				PreparedStatement ps = conn.prepareStatement(query)) {
+
+			ps.setInt(1, orderId);
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					OrderDetail d = new OrderDetail();
+					d.setProductId(rs.getInt("product_id"));
+					d.setQuantity(rs.getInt("quantity"));
+					d.setPrice(rs.getDouble("price"));
+					list.add(d);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	// Cập nhật mã băm và trạng thái đơn hàng
+	public void updateOrderHashAndStatus(int orderId, String hash, String status) {
+		String query = "UPDATE Orders SET order_hash = ?, status = ? WHERE order_id = ?";
+		try (Connection conn = DBContext.getDataSource().getConnection();
+				PreparedStatement ps = conn.prepareStatement(query)) {
+			ps.setString(1, hash);
+			ps.setString(2, status);
+			ps.setInt(3, orderId);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	// Lưu chữ ký số và các thông tin liên quan khi xác thực thành công
+	public void updateOrderSignature(int orderId, int keyId, String signature, String status) {
+	    String query = "UPDATE Orders SET key_id = ?, digital_signature = ?, signed_at = GETDATE(), status = ? WHERE order_id = ?";
+	    try (Connection conn = DBContext.getDataSource().getConnection();
+	         PreparedStatement ps = conn.prepareStatement(query)) {
+	        ps.setInt(1, keyId);
+	        ps.setString(2, signature);
+	        ps.setString(3, status);
+	        ps.setInt(4, orderId);
+	        ps.executeUpdate();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
 
 }

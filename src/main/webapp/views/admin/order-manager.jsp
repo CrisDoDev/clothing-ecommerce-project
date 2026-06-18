@@ -1,4 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ include file="layout-admin.jsp"%>
@@ -15,9 +16,17 @@
 				<div class="col-auto">
 					<select name="status" class="form-select">
 						<option value="all">Tất cả</option>
-						<option value="Đã xác nhận"
-							${param.status == 'Đã xác nhận' ? 'selected' : ''}>Đã
-							xác nhận</option>
+						<option value="Chờ ký số"
+							${param.status == 'Chờ ký số' ? 'selected' : ''}>Chờ ký
+							số</option>
+						<option value="Đã xác thực"
+							${param.status == 'Đã xác thực' ? 'selected' : ''}>Đã
+							xác thực</option>
+						<option value="Đang giao"
+							${param.status == 'Đang giao' ? 'selected' : ''}>Đang
+							giao</option>
+						<option value="Đã giao"
+							${param.status == 'Đã giao' ? 'selected' : ''}>Đã giao</option>
 						<option value="Đã hủy"
 							${param.status == 'Đã hủy' ? 'selected' : ''}>Đã hủy</option>
 					</select>
@@ -52,9 +61,30 @@
 						</td>
 						<td class="text-danger fw-bold"><fmt:formatNumber
 								value="${o.totalMoney}" type="currency" currencySymbol="₫" /></td>
-						<td><span
-							class="badge ${o.status == 'Đã hủy' ? 'bg-danger' : 'bg-success'}">
-								${o.status} </span></td>
+						<td><c:choose>
+								<c:when test="${o.status == 'Đã xác thực'}">
+									<span class="badge bg-success">Đã xác thực</span>
+								</c:when>
+								<c:when test="${o.status == 'Lỗi: Dữ liệu bất thường'}">
+									<span class="badge bg-danger shadow cursor-pointer"
+										title="CẢNH BÁO: Dữ liệu đơn hàng hoặc giá trị thanh toán đã bị sửa đổi trái phép!">LỖI:
+										DỮ LIỆU BẤT THƯỜNG</span>
+								</c:when>
+								<c:when test="${o.status == 'Lỗi: Khóa hết hiệu lực'}">
+									<span class="badge bg-warning text-dark shadow cursor-pointer"
+										title="Đơn hàng được ký bằng khóa đã bị thu hồi trước thời điểm ký.">Lỗi:
+										Khóa hết hiệu lực</span>
+								</c:when>
+								<c:when test="${o.status == 'Chờ ký số'}">
+									<span class="badge bg-warning text-dark">Chờ ký số</span>
+								</c:when>
+								<c:when test="${o.status == 'Đã hủy'}">
+									<span class="badge bg-secondary">Đã hủy</span>
+								</c:when>
+								<c:otherwise>
+									<span class="badge bg-primary">${o.status}</span>
+								</c:otherwise>
+							</c:choose></td>
 						<td>
 							<button class="btn btn-info btn-sm text-white"
 								onclick="viewOrderDetails('${o.id}')" title="Xem chi tiết">
@@ -99,7 +129,10 @@
 					<div class="mb-3">
 						<label class="form-label">Trạng thái mới</label> <select
 							name="status" id="update_status" class="form-select">
-							<option value="Đã xác nhận">Đã xác nhận</option>
+							<option value="Chờ ký số">Chờ ký số</option>
+							<option value="Đã xác thực">Đã xác thực</option>
+							<option value="Đang giao">Đang giao</option>
+							<option value="Đã giao">Đã giao</option>
 							<option value="Đã hủy">Đã hủy</option>
 						</select>
 					</div>
