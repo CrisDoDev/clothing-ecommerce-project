@@ -1,3 +1,5 @@
+package until;
+
 import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -44,11 +46,11 @@ public static String loadText(Component parent) {
 public static void saveText(Component parent, String text, String defaultName) {
     // check rong truoc
     if (text == null) {
-        JOptionPane.showMessageDialog(parent, "Khong co noi dung");
+        JOptionPane.showMessageDialog(parent, "Không có nội dung để lưu");
         return;
     }
     if (text.equals("")) {
-        JOptionPane.showMessageDialog(parent, "Khong co noi dung");
+        JOptionPane.showMessageDialog(parent, "Không có nội dung để lưu");
         return;
     }
 
@@ -64,27 +66,27 @@ public static void saveText(Component parent, String text, String defaultName) {
         bw.write(text);
         bw.close();
         fw.close();
-        System.out.println("[FileIO] da luu: " + tep.getAbsolutePath());
+        System.out.println("[FileIO] đã lưu: " + tep.getAbsolutePath());
         JOptionPane.showMessageDialog(parent,
-                "Da luu thanh cong:\n" + tep.getAbsolutePath());
+                "Đã lưu thành công:\n" + tep.getAbsolutePath());
     } catch (Exception ex) {
         ex.printStackTrace();
         JOptionPane.showMessageDialog(parent,
-                "Loi khi luu file: " + ex.getMessage(),
-                "Loi", JOptionPane.ERROR_MESSAGE);
+                "Lỗi khi lưu file: " + ex.getMessage(),
+                "Lỗi", JOptionPane.ERROR_MESSAGE);
     }
 }
 
 
     public static void main(String[] args) {
-        String textToSave = "Nd luu vào file.";
+        String textToSave = "Nội dung để lưu vào file.";
         String filePath = "output.txt";
 
         try (java.io.FileWriter writer = new java.io.FileWriter(filePath)) {
             writer.write(textToSave);
-            System.out.println("Da luu noi dung vao file " + filePath);
+            System.out.println("Đã lưu nội dung vào file " + filePath);
         } catch (java.io.IOException e) {
-            System.err.println("Loi khi luu: " + e.getMessage());
+            System.err.println("Lỗi khi lưu: " + e.getMessage());
         }
     }
 }

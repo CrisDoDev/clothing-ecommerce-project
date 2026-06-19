@@ -1,7 +1,7 @@
 package ui;
 
 import rsa.RSA;
-
+import until.SaveLoadFileText;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -86,7 +86,7 @@ public class SigningPanel extends JPanel {
         JButton btnClear = new JButton("Xóa");
 
         btnLoad.addActionListener(e -> {
-            String content = loadTextFromFile();
+            String content = SaveLoadFileText.loadText(this);
             if (content != null) txtPrivKey.setText(content);
         });
         btnClear.addActionListener(e -> txtPrivKey.setText(""));
@@ -154,7 +154,7 @@ public class SigningPanel extends JPanel {
         JButton btnCopy = new JButton("Copy");
         JButton btnSave = new JButton("Lưu file");
         btnCopy.addActionListener(e -> copyToClipboard(txtSignature.getText(), "Đã copy chữ ký số!"));
-        btnSave.addActionListener(e -> saveTextToFile(txtSignature.getText(), "signature.sig"));
+        btnSave.addActionListener(e -> SaveLoadFileText.saveText(this, txtSignature.getText(), "signature.sig"));
         sigTools.add(btnCopy);
         sigTools.add(btnSave);
         center.add(sigTools);
@@ -208,43 +208,7 @@ public class SigningPanel extends JPanel {
         statusLabel.setText(msg);
     }
 
-    private String loadTextFromFile() {
-        JFileChooser fc = new JFileChooser();
-        if (fc.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) return null;
-        File file = fc.getSelectedFile();
-        try (BufferedReader br = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) {
-                sb.append(line.trim());
-            }
-            return sb.toString();
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Không đọc được file: " + ex.getMessage(),
-                    "Lỗi", JOptionPane.ERROR_MESSAGE);
-            return null;
-        }
-    }
-
-    private void saveTextToFile(String text, String defaultFileName) {
-        if (text == null || text.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Không có nội dung để lưu.",
-                    "Thiếu dữ liệu", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        JFileChooser fc = new JFileChooser();
-        fc.setSelectedFile(new File(defaultFileName));
-        if (fc.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) return;
-        File file = fc.getSelectedFile();
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
-            bw.write(text);
-            JOptionPane.showMessageDialog(this, "Đã lưu: " + file.getAbsolutePath(),
-                    "Thành công", JOptionPane.INFORMATION_MESSAGE);
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Không lưu được file: " + ex.getMessage(),
-                    "Lỗi", JOptionPane.ERROR_MESSAGE);
-        }
-    }
+    
 
     private void copyToClipboard(String text, String successMsg) {
         if (text == null || text.isEmpty()) return;
