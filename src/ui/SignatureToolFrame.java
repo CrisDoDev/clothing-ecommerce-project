@@ -72,7 +72,7 @@ public class SignatureToolFrame extends JFrame {
         JLabel title = new JLabel("Signature Tool");
         title.setFont(new Font("SansSerif", Font.BOLD, 40));
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
-
+        
         JLabel subtitle = new JLabel("Chọn chức năng ở thanh bên trái để bắt đầu");
         subtitle.setFont(new Font("SansSerif", Font.PLAIN, 22));
         subtitle.setForeground(new Color(96, 109, 123));

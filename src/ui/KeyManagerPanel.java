@@ -14,6 +14,7 @@ import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 
 import rsa.RSA;
+import until.SaveLoadFileText;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -33,6 +34,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.sql.Savepoint;
 
 // Panel: Sinh va quan ly cap khoa RSA (Public Key + Private Key dang Base64)
 public class KeyManagerPanel extends JPanel {
@@ -122,10 +124,10 @@ public class KeyManagerPanel extends JPanel {
 
         btnCopy.addActionListener(e -> copyToClipboard(area.getText(), "Đã copy " + title + "!"));
         btnLoad.addActionListener(e -> {
-            String content = loadTextFromFile();
+            String content = SaveLoadFileText.loadText(this);
             if (content != null) area.setText(content);
         });
-        btnSave.addActionListener(e -> saveTextToFile(area.getText(), defaultFileName));
+        btnSave.addActionListener(e -> SaveLoadFileText.saveText(this, area.getText(), defaultFileName));
 
         tools.add(btnCopy);
         tools.add(btnLoad);
@@ -155,45 +157,7 @@ public class KeyManagerPanel extends JPanel {
         }
     }
 
-    // Doc file text (dung khi nhap key tu file)
-    private String loadTextFromFile() {
-        JFileChooser fc = new JFileChooser();
-        if (fc.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) return null;
-        File file = fc.getSelectedFile();
-        try (BufferedReader br = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) {
-                sb.append(line.trim());
-            }
-            return sb.toString();
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Không đọc được file: " + ex.getMessage(),
-                    "Lỗi", JOptionPane.ERROR_MESSAGE);
-            return null;
-        }
-    }
-
-    // Ghi file text (dung khi luu key ra .pub / .pri)
-    private void saveTextToFile(String text, String defaultFileName) {
-        if (text == null || text.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Không có nội dung để lưu.",
-                    "Thiếu dữ liệu", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        JFileChooser fc = new JFileChooser();
-        fc.setSelectedFile(new File(defaultFileName));
-        if (fc.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) return;
-        File file = fc.getSelectedFile();
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
-            bw.write(text);
-            JOptionPane.showMessageDialog(this, "Đã lưu: " + file.getAbsolutePath(),
-                    "Thành công", JOptionPane.INFORMATION_MESSAGE);
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Không lưu được file: " + ex.getMessage(),
-                    "Lỗi", JOptionPane.ERROR_MESSAGE);
-        }
-    }
+    
 
     private void copyToClipboard(String text, String successMsg) {
         if (text == null || text.isEmpty()) return;
