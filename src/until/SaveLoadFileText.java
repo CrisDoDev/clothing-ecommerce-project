@@ -75,6 +75,9 @@ public static void saveText(Component parent, String text, String defaultName) {
                 "Lỗi khi lưu file: " + ex.getMessage(),
                 "Lỗi", JOptionPane.ERROR_MESSAGE);
     }
+
+
+    
 }
 
 

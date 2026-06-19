@@ -52,7 +52,7 @@ public class KeyManagerPanel extends JPanel {
         north.setOpaque(false);
         north.setLayout(new BoxLayout(north, BoxLayout.Y_AXIS));
 
-        JLabel title = new JLabel("Sinh & Quản lý cặp khóa — RSA");
+        JLabel title = new JLabel("Quản lý khoá RSA");
         title.setFont(new Font("SansSerif", Font.BOLD, 24));
         title.setAlignmentX(Component.LEFT_ALIGNMENT);
         north.add(title);
@@ -139,21 +139,38 @@ public class KeyManagerPanel extends JPanel {
 
     // Sinh cap khoa RSA va hien thi ra 2 o text
     private void onGenerateKeyPair() {
+        
+            int keySize = 2048;
         try {
-            int keySize = Integer.parseInt((String) cbKeySize.getSelectedItem());
+            keySize = Integer.parseInt((String) cbKeySize.getSelectedItem());
+        } catch (Exception e) {
+            // fallback neu parse loi
+            keySize = 2048;
+        }
+        // System.out.println("KeyManager đang GEn  RSA " + keySize + " bits...");
+        // long t1 = System.currentTimeMillis();
+
+        try {
             KeyPair pair = RSA.generateKeyPair(keySize);
-            PublicKey publicKey = pair.getPublic();
-            PrivateKey privateKey = pair.getPrivate();
-            txtPubKey.setText(RSA.publicKeyToBase64(publicKey));
-            txtPrivKey.setText(RSA.privateKeyToBase64(privateKey));
-            JOptionPane.showMessageDialog(this,
-                    "Tạo cặp khóa RSA " + keySize + " bits thành công!\n"
-                            + "Hãy lưu Private Key (.pri) vào máy cá nhân, copy Public Key dán lên Website.",
-                    "Thành công", JOptionPane.INFORMATION_MESSAGE);
+            PublicKey pub = pair.getPublic();
+            PrivateKey priv = pair.getPrivate();
+
+            String pubB64 = RSA.publicKeyToBase64(pub);
+            String privB64 = RSA.privateKeyToBase64(priv);
+
+            txtPubKey.setText(pubB64);
+            txtPrivKey.setText(privB64);
+
+            // long t2 = System.currentTimeMillis();
+            // System.out.println("KeyManager gen xong, hết " +(t2 - t1) + "ms");
+
+            String tb = "Tạo cặp khóa RSA " + keySize + " bits thành công!\n"
+                  + "Hãy lưu Private Key vào máy cá nhân,\n"
+                  + "copy Public Key dán lên web.";
+            JOptionPane.showMessageDialog(this, tb, "Thành công",
+                JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this,
-                    "Có lỗi xảy ra: " + ex.getMessage(),
-                    "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,"Có lỗi xảy ra: " + ex.getMessage(),"Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
 

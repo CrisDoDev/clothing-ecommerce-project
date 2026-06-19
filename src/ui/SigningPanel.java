@@ -125,7 +125,8 @@ public class SigningPanel extends JPanel {
         center.add(Box.createVerticalStrut(10));
 
         JButton btnSign = new JButton("KÝ ĐƠN HÀNG");
-        btnSign.setFont(new Font("SansSerif", Font.BOLD, 14));
+        btnSign.setFont(new Font("SansSerif", Font.BOLD, 16));
+
         btnSign.setAlignmentX(Component.LEFT_ALIGNMENT);
         btnSign.setMaximumSize(new Dimension(Integer.MAX_VALUE, 42));
         btnSign.addActionListener(e -> onSign());
