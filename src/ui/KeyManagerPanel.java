@@ -68,6 +68,15 @@ public class KeyManagerPanel extends JPanel {
         north.add(buildKeySizeSection());
         north.add(Box.createVerticalStrut(8));
 
+        JLabel hint = new JLabel("Gợi ý: 2048 bits là mức keysize khuyên dùng.");
+        hint.setFont(new Font("SansSerif", Font.ITALIC, 11));
+        hint.setForeground(new Color(120, 130, 150));
+        hint.setAlignmentX(Component.LEFT_ALIGNMENT);
+        north.add(Box.createVerticalStrut(4));
+        north.add(hint);
+
+
+        
         add(north, BorderLayout.NORTH);
         add(buildKeysPanel(), BorderLayout.CENTER);
     }

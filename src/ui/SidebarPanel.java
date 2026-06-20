@@ -37,6 +37,19 @@ public class SidebarPanel extends JPanel {
         title.setBorder(new EmptyBorder(0, 8, 16, 8));
         content.add(title);
 
+        JSeparator topSep = new JSeparator();
+        topSep.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
+        topSep.setForeground(new Color(220, 220, 220));
+        content.add(topSep);
+        content.add(Box.createVerticalStrut(8));
+
+
+        JLabel subT = new JLabel("Chữ ký số đơn hàng");
+        subT.setFont(new Font("SansSerif", Font.ITALIC, 12));
+        subT.setForeground(new Color(130, 130, 130));
+        subT.setBorder(new EmptyBorder(0, 10, 14, 8));
+        content.add(subT);
+
         String currentSection = "";
         for (SidebarItem item : items) {
             if (!item.section().equals(currentSection)) {

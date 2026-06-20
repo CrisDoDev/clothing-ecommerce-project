@@ -67,13 +67,10 @@ public static void saveText(Component parent, String text, String defaultName) {
         bw.close();
         fw.close();
         System.out.println("[FileIO] đã lưu: " + tep.getAbsolutePath());
-        JOptionPane.showMessageDialog(parent,
-                "Đã lưu thành công:\n" + tep.getAbsolutePath());
+        JOptionPane.showMessageDialog(parent, "Đã lưu thành công:\n" + tep.getAbsolutePath());
     } catch (Exception ex) {
         ex.printStackTrace();
-        JOptionPane.showMessageDialog(parent,
-                "Lỗi khi lưu file: " + ex.getMessage(),
-                "Lỗi", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(parent,"Lỗi khi lưu file: " + ex.getMessage(),"Lỗi", JOptionPane.ERROR_MESSAGE);
     }
 
 
